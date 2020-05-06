@@ -1,0 +1,27 @@
+version: '3'
+services:
+  web-server:
+    build: 
+      context: .
+      args:
+        - POSTGRES_USER=spring
+        - POSTGRES_PASSWORD=123
+        - POSTGRES_HOST=postgres
+        - POSTGRES_PORT=5432
+    ports:
+      - "8080:8080"
+    environment: 
+      - POSTGRES_USER=spring
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres
+    # volumes:
+    #   - ./database/postgres/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: 'spring'
+      POSTGRES_PASSWORD: '123'
+
