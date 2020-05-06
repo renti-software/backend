@@ -1,0 +1,57 @@
+tages:
+    - tests
+    - build
+    - run
+    - docker
+    - deploy
+
+include:
+    - template: Code-Quality.gitlab-ci.yml
+
+.template: &install_docker_compose
+    image: docker/compose:latest
+    services:
+        - docker:dind
+
+code_quality:
+    stage: tests
+    artifacts:
+        paths: [gl-code-quality-report.json]
+
+build:
+    stage: build
+    <<: *install_docker_compose
+    script:
+        - docker-compose build
+
+run:
+    stage: run
+    <<: *install_docker_compose
+    script:
+        - docker-compose up -d
+        - docker-compose down
+docker:
+  stage: docker
+  image: docker:stable
+  only:
+    - master
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - name: docker:dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"]
+  script:
+    - echo "Building and uploading Docker image 🐳"
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH .
+    - docker push $CI_REGISTRY/$CI_PROJECT_PATH
+
+deploy:
+  stage: deploy
+  trigger: tqs-project/compose
+  only:
+    - master
+
