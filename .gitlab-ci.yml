@@ -51,7 +51,7 @@ docker:
 
 deploy:
   stage: deploy
-  trigger: tqs-project/compose
+  trigger: renti-software/compose
   only:
     - master
 
