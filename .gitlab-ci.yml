@@ -18,6 +18,13 @@ code_quality:
     artifacts:
         paths: [gl-code-quality-report.json]
 
+maven_tests:
+  stage: tests
+  image: maven
+  script:
+    - cd marketplace
+    - mvn test
+
 build:
     stage: build
     <<: *install_docker_compose
