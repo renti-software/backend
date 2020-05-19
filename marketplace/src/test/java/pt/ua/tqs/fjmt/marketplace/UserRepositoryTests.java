@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import pt.ua.tqs.fjmt.marketplace.entities.User;
@@ -24,6 +25,7 @@ public class UserRepositoryTests {
     // write test cases here
 
     @Test
+    @DisplayName("After user is on the DB, a query should return it")
     public void whenFindByName_thenReturnUser() {
         // given
         User alex = new User("alex", "", null, "");
