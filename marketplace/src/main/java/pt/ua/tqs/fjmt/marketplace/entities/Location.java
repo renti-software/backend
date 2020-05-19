@@ -11,8 +11,12 @@ import javax.persistence.Id;
 @Entity
 class Location {
 
-  private @Id @GeneratedValue Long id;
+  @Id 
+  @GeneratedValue 
+  private Long id;
+
   private String city_name;
+
   private String country;
 
   Location() {}
