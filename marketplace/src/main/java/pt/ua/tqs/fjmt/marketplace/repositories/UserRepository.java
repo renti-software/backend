@@ -11,5 +11,6 @@ import pt.ua.tqs.fjmt.marketplace.entities.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     public List<User> findAll();
+    public User findByName(String name);
 
 }
