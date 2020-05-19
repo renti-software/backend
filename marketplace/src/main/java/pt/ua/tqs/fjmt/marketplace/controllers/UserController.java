@@ -25,7 +25,6 @@ public class UserController {
 
     @GetMapping("/")
     public List<User> findAll() {
-        repository.save(new User());
         return repository.findAll();
     }
 
