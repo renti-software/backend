@@ -27,6 +27,7 @@ maven_tests:
   services:
     - postgres
   variables:
+    POSTGRES_USER: "postgres"
     POSTGRES_USER: spring
     POSTGRES_PASSWORD: "123"
     POSTGRES_HOST_AUTH_METHOD: trust
