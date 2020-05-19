@@ -17,7 +17,7 @@ public class Product {
     private String name;
     private String category;
     private String Description;
-    private float price_per_hour;
+    private float price;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Location location;
@@ -29,11 +29,11 @@ public class Product {
 
     public Product() {this("", "", "", 0.0f, null, null);}
 
-    public Product(String name, String category, String description, float price_per_hour, Location location, User user) {
+    public Product(String name, String category, String description, float price, Location location, User user) {
         this.name = name;
         this.category = category;
         Description = description;
-        this.price_per_hour = price_per_hour;
+        this.price = price;
         this.location = location;
         this.user = user;
     }
@@ -62,12 +62,12 @@ public class Product {
         Description = description;
     }
 
-    public float getPrice_per_hour() {
-        return price_per_hour;
+    public float getPrice() {
+        return price;
     }
 
-    public void setPrice_per_hour(float price_per_hour) {
-        this.price_per_hour = price_per_hour;
+    public void setPrice(float price) {
+        this.price = price;
     }
 
     public Location getLocation() {
