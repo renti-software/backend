@@ -13,7 +13,7 @@ COPY marketplace/pom.xml /usr/src/app/
 # Download the package and make it cached in docker image
 RUN mvn -B -f /usr/src/app/pom.xml dependency:go-offline
 COPY marketplace/src/ /usr/src/app/src/
-RUN mvn -f /usr/src/app/pom.xml package -Dmaven.skip.tests=true
+RUN mvn -f /usr/src/app/pom.xml package -Dmaven.test.skip=true
 
 FROM openjdk:9
 RUN echo "Running"

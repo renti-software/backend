@@ -19,8 +19,6 @@ services:
       - postgres
   postgres:
     image: postgres
-    # volumes:
-    #   - ./database/postgres/data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: 'spring'
       POSTGRES_PASSWORD: '123'
