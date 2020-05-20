@@ -24,7 +24,7 @@ public class UserRepositoryTests {
     private TestEntityManager entityManager;
  
     @Autowired
-    private UserRepository employeeRepository;
+    private UserRepository userRepository;
  
     @BeforeEach
     public void clear_repository() {
@@ -41,7 +41,7 @@ public class UserRepositoryTests {
         entityManager.flush();
     
         // when
-        User found = employeeRepository.findByName(alex.getName());
+        User found = userRepository.findByName(alex.getName());
     
         // then
         Assertions.assertEquals(found.getName(), alex.getName());
@@ -61,7 +61,7 @@ public class UserRepositoryTests {
         entityManager.flush();
 
         //when
-        List<User> found = employeeRepository.findAll();
+        List<User> found = userRepository.findAll();
 
         //then
         Assertions.assertEquals(n_users, found.size());
@@ -76,7 +76,7 @@ public class UserRepositoryTests {
         entityManager.flush();
     
         // when
-        User found = employeeRepository.findByEmail(alex.getEmail());
+        User found = userRepository.findByEmail(alex.getEmail());
     
         // then
         Assertions.assertEquals(found.getEmail(), alex.getEmail());
@@ -92,7 +92,7 @@ public class UserRepositoryTests {
         entityManager.flush();
     
         // when
-        List<User> found = employeeRepository.findByLocation(aveiro);
+        List<User> found = userRepository.findByLocation(aveiro);
     
         // then
         boolean alex_found = false;
