@@ -75,10 +75,12 @@ public class LocationRepositoryTests {
         entityManager.flush();
     
         // when
-        Location found = locationRepository.findByEmail(aveiro.getCountry());
+        List<Location> found = locationRepository.findByCountry(aveiro.getCountry());
     
         // then
-        Assertions.assertEquals(found.getCountry(), aveiro.getCountry());
+        for(Location l : found) {
+            Assertions.assertEquals(l.getCountry(), aveiro.getCountry());
+        }
     }
 
 
