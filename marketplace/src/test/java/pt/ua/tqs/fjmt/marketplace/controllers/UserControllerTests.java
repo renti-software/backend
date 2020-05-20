@@ -46,7 +46,7 @@ public class UserControllerTests {
     @Test
     @DisplayName("Should return 404 when user not found")
     public void whenUserDoesNotExist_thenReturnsNotFound() throws Exception {
-        mockMvc.perform(get("users/1462")).andExpect(status().isNotFound());
+        mockMvc.perform(get("users?id=1462")).andExpect(status().isNotFound());
     }
 
     @Test
@@ -68,13 +68,13 @@ public class UserControllerTests {
     public void whenUserInserted_thenReturnsUser() throws Exception {
         User u = new User("alex", "", null, "");
         mockMvc.perform(postUser("/users/", u)).andExpect(status().isOk());
-        mockMvc.perform(get("/users/name/alex")).andExpect(status().isOk());
+        mockMvc.perform(get("/users?name=alex")).andExpect(status().isOk());
     }
 
     @Test 
     @DisplayName("API should return 404 when searching by name and user does not exist")
     public void whenUserDoesNotExistAndSearchByName_thenReturnsNotFound() throws Exception {
-        mockMvc.perform(get("users/name/ola")).andExpect(status().isNotFound());
+        mockMvc.perform(get("users?name=ola")).andExpect(status().isNotFound());
     }
 
     private static MockHttpServletRequestBuilder postUser (String url, User u) {
