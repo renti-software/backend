@@ -11,5 +11,6 @@ import pt.ua.tqs.fjmt.marketplace.entities.Location;
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
     public List<Location> findAll();
+    public Location findByName(String name);
 
 }
