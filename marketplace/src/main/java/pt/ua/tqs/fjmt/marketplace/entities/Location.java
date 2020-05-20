@@ -18,9 +18,9 @@ public class Location {
 
   private String country;
 
-  Location() {}
+  public Location() {}
 
-  Location(String city_name, String country) {
+  public Location(String city_name, String country) {
     this.city_name = city_name;
     this.country = country;
   }
