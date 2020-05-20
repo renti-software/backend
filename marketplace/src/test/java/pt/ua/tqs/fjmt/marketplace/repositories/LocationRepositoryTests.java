@@ -68,7 +68,7 @@ public class LocationRepositoryTests {
 
     @Test
     @DisplayName("Repository should allow search by Coutry")
-    public void whenFindByEmail_thenReturnUser() {
+    public void whenFindByEmail_thenReturnLocation() {
         // given
         Location aveiro = new Location("Aveiro", "Portugal");
         entityManager.persist(aveiro);
@@ -80,5 +80,7 @@ public class LocationRepositoryTests {
         // then
         Assertions.assertEquals(found.getCountry(), aveiro.getCountry());
     }
+
+
 
 }
