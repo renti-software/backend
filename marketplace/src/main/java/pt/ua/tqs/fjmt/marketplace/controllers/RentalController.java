@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rentals")
 @CrossOrigin(origins = "*")
 public class RentalController {
-    
+
 }

@@ -1,11 +1,15 @@
 package pt.ua.tqs.fjmt.marketplace.entities;
 
+import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Date;
 
+@Data
+@Entity
+@Table(name = "Rental")
 public class Rental {
     @Id
     @GeneratedValue
