@@ -39,4 +39,6 @@ public class User {
     this.location = location;
     this.password = password;
   }
+
+
 }

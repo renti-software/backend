@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name = "Rental")
 public class Rental {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade=CascadeType.ALL)
