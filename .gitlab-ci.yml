@@ -32,14 +32,14 @@ maven_tests:
   script:
     - cd marketplace
     - mvn test
-  services:
-    - postgres
-  variables:
-    POSTGRES_HOST: "postgres"
-    POSTGRES_PORT: 5432
-    POSTGRES_USER: spring
-    POSTGRES_PASSWORD: "123"
-    POSTGRES_HOST_AUTH_METHOD: trust
+  # services:
+  #   - postgres
+  # variables:
+  #   POSTGRES_HOST: "postgres"
+  #   POSTGRES_PORT: 5432
+  #   POSTGRES_USER: spring
+  #   POSTGRES_PASSWORD: "123"
+  #   POSTGRES_HOST_AUTH_METHOD: trust
 
 build:
     stage: build
