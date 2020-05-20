@@ -5,7 +5,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +25,10 @@ public class UserRepositoryTests {
     @Autowired
     private UserRepository employeeRepository;
  
-    // write test cases here
+    @BeforeEach
+    public void clear_repository() {
+        this.entityManager.clear();
+    }
 
     @Test
     @DisplayName("After user is on the DB, a query should return it")
@@ -37,6 +43,26 @@ public class UserRepositoryTests {
     
         // then
         Assertions.assertEquals(found.getName(), alex.getName());
+    }
+
+    @Test
+    @DisplayName("FindAll should return equal number of users as inserted")
+    public void whenFindAll_thenReturnAll() {
+        //given
+        int n_users = 3;
+        User u1 = new User();
+        User u2 = new User();
+        User u3 = new User();
+        entityManager.persist(u1);
+        entityManager.persist(u2);
+        entityManager.persist(u3);
+        entityManager.flush();
+
+        //when
+        List<User> found = employeeRepository.findAll();
+
+        //then
+        Assertions.assertEquals(n_users, found.size());
     }
 
 }
