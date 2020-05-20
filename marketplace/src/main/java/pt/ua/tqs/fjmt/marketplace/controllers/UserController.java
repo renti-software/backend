@@ -1,7 +1,9 @@
 package pt.ua.tqs.fjmt.marketplace.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import pt.ua.tqs.fjmt.marketplace.entities.User;
 import pt.ua.tqs.fjmt.marketplace.repositories.UserRepository;
@@ -41,6 +43,11 @@ public class UserController {
         }
         else {
             found = repository.findAll();
+        }
+        if (found.size() == 0) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "User not found"
+            );
         }
         return found;
     }
