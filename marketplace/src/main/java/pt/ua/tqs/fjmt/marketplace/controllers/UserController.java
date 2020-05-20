@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fjmt.marketplace.entities.User;
 import pt.ua.tqs.fjmt.marketplace.repositories.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -18,22 +20,29 @@ public class UserController {
     @Autowired
     UserRepository repository;
 
-    @GetMapping("/")
-    public List<User> findAll() {
-        List<User> found = repository.findAll();
-        return found;
-    }
-
     @PostMapping("/")
     public Long create(@RequestBody User user) {
         repository.save(user);
         return user.getId();
     }
 
-    @GetMapping("/name/{name}")
-    public User getUserByName(@RequestParam String name) {
-        User u = repository.findByName(name);
-        return u;
+    @GetMapping("")
+    public List<User> getUserByName(@RequestParam(required = false) String name,
+                                    @RequestParam(required = false) Long id) {
+        List<User> found = new ArrayList<>();
+        if (name != null) {
+            found = repository.findByName(name);
+        }
+        else if (id != null) {
+            Optional<User> u = repository.findById(id);
+            if (u.isPresent()) {
+                found.add(u.get());
+            }
+        }
+        else {
+            found = repository.findAll();
+        }
+        return found;
     }
 
     // @DeleteMapping("/")
