@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fjmt.marketplace.entities.User;
 import pt.ua.tqs.fjmt.marketplace.repositories.UserRepository;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @CrossOrigin(origins = "*")
 public class UserController {
 
@@ -25,7 +27,13 @@ public class UserController {
 
     @GetMapping("/")
     public List<User> findAll() {
-        return repository.findAll();
+        List<User> found = repository.findAll();
+        return found;
+        // if (found.size() != 0)
+        //     return found;
+        // else {
+        //     return Collections.emptyList();
+        // }
     }
 
     // @DeleteMapping("/")
