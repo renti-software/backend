@@ -22,7 +22,7 @@ public class Product {
     @OneToOne(cascade = CascadeType.ALL)
     private Location location;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade=CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
