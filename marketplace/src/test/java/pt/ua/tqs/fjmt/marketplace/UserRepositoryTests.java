@@ -28,6 +28,7 @@ public class UserRepositoryTests {
     @BeforeEach
     public void clear_repository() {
         this.entityManager.clear();
+        this.entityManager.flush();
     }
 
     @Test
@@ -63,6 +64,21 @@ public class UserRepositoryTests {
 
         //then
         Assertions.assertEquals(n_users, found.size());
+    }
+
+    @Test
+    @DisplayName("Repository should allow search by email")
+    public void whenFindByEmail_thenReturnUser() {
+        // given
+        User alex = new User("alex", "alex@mail.com", null, "");
+        entityManager.persist(alex);
+        entityManager.flush();
+    
+        // when
+        User found = employeeRepository.findByEmail(alex.getEmail());
+    
+        // then
+        Assertions.assertEquals(found.getEmail(), alex.getEmail());
     }
 
 }
