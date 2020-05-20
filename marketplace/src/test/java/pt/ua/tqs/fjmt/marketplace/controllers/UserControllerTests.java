@@ -9,7 +9,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import pt.ua.tqs.fjmt.marketplace.entities.User;
 import pt.ua.tqs.fjmt.marketplace.repositories.UserRepository;
@@ -17,6 +19,8 @@ import pt.ua.tqs.fjmt.marketplace.repositories.UserRepository;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -48,7 +52,9 @@ public class UserControllerTests {
     @Test
     @DisplayName("Inserting user should return 200")
     public void whenCorrectInsertion_thenReturnsOk() throws Exception {
-        mockMvc.perform(post("/users/", new User())).andExpect(status().isOk());
+        User u = new User();
+        mockMvc.perform(postUser("/users/", u))
+               .andExpect(status().isOk());
     }
 
     @Test
@@ -58,11 +64,31 @@ public class UserControllerTests {
     }
 
     @Test 
-    @DisplayName("After inserting user API should return it")
+    @DisplayName("After inserting user API should return it when searching by name")
     public void whenUserInserted_thenReturnsUser() throws Exception {
         User u = new User("alex", "", null, "");
-        mockMvc.perform(post("/users/", u)).andExpect(status().isOk());
-        mockMvc.perform(post("/users/", u)).andExpect(status().isOk()).andExpect(content().string(containsString("alex")));
+        mockMvc.perform(postUser("/users/", u)).andExpect(status().isOk());
+        mockMvc.perform(get("/users/name/alex")).andExpect(status().isOk());
+    }
+
+    @Test 
+    @DisplayName("API should return 404 when searching by name and user does not exist")
+    public void whenUserDoesNotExistAndSearchByName_thenReturnsNotFound() throws Exception {
+        mockMvc.perform(get("users/name/ola")).andExpect(status().isNotFound());
+    }
+
+    private static MockHttpServletRequestBuilder postUser (String url, User u) {
+        return post(url)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(u));
+    }
+
+    private static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
