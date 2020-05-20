@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -25,12 +26,12 @@ public class Rental {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
 
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public Rental() {this(null, null, null, null);}
 
-    public Rental(User renter, Product product, Date startDate, Date endDate) {
+    public Rental(User renter, Product product, LocalDate startDate, LocalDate endDate) {
         this.renter = renter;
         this.product = product;
         this.startDate = startDate;
@@ -53,19 +54,19 @@ public class Rental {
         this.product = product;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 }
