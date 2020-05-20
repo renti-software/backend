@@ -40,7 +40,7 @@ public class LocationRepositoryTests {
         entityManager.flush();
     
         // when
-        Location found = locationRepository.findByName(aveiro.getCity_name());
+        Location found = locationRepository.findByCity_name(aveiro.getCity_name());
     
         // then
         Assertions.assertEquals(found.getCity_name(), aveiro.getCity_name());
