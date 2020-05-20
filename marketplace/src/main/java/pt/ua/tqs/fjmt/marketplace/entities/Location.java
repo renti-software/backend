@@ -1,4 +1,3 @@
-
 package pt.ua.tqs.fjmt.marketplace.entities;
 
 import lombok.Data;
@@ -9,20 +8,20 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-class Location {
+public class Location {
 
   @Id 
   @GeneratedValue 
   private Long id;
 
-  private String city_name;
+  private String cityName;
 
   private String country;
 
-  Location() {}
+  public Location() {}
 
-  Location(String city_name, String country) {
-    this.city_name = city_name;
+  public Location(String cityName, String country) {
+    this.cityName = cityName;
     this.country = country;
   }
 }
