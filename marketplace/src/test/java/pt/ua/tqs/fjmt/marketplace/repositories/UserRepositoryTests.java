@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import pt.ua.tqs.fjmt.marketplace.entities.Location;
 import pt.ua.tqs.fjmt.marketplace.entities.User;
 import pt.ua.tqs.fjmt.marketplace.repositories.UserRepository;
 
@@ -79,6 +80,31 @@ public class UserRepositoryTests {
     
         // then
         Assertions.assertEquals(found.getEmail(), alex.getEmail());
+    }
+
+    @Test
+    @DisplayName("Repository should allow search by location")
+    public void whenFindByLocation_thenReturnUser() {
+        // given
+        Location aveiro = new Location("Aveiro", "Portugal");
+        User alex = new User("alex", "alex@mail.com", aveiro, "");
+        entityManager.persist(alex);
+        entityManager.flush();
+    
+        // when
+        List<User> found = employeeRepository.findByLocation(aveiro);
+    
+        // then
+        boolean alex_found = false;
+        for(User u : found) {
+            // all users found should have Location Aveiro
+            Assertions.assertEquals(u.getLocation(), aveiro);
+            if (u.getName().equals(alex.getName()))
+                alex_found = true;
+        }
+        // and Alex should be one of them
+        Assertions.assertTrue(alex_found);
+
     }
 
 }
