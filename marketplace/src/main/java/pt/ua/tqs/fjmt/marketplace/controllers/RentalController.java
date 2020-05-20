@@ -17,7 +17,7 @@ public class RentalController {
     @Autowired
     RentalRepository rentalRepository;
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<Rental> findAll(){
         return rentalRepository.findAll();
     }
@@ -37,7 +37,7 @@ public class RentalController {
         return rentalRepository.findByProduct(product);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public String addRental(Rental rental){
         rentalRepository.save(rental);
         return "New rental added";
