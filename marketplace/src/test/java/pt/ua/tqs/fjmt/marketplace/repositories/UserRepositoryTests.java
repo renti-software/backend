@@ -1,4 +1,4 @@
-package pt.ua.tqs.fjmt.marketplace;
+package pt.ua.tqs.fjmt.marketplace.repositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
