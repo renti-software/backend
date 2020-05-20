@@ -41,7 +41,7 @@ public class UserRepositoryTests {
         entityManager.flush();
     
         // when
-        User found = userRepository.findByName(alex.getName());
+        User found = userRepository.findByName(alex.getName()).get(0);
     
         // then
         Assertions.assertEquals(found.getName(), alex.getName());
@@ -76,7 +76,7 @@ public class UserRepositoryTests {
         entityManager.flush();
     
         // when
-        User found = userRepository.findByEmail(alex.getEmail());
+        User found = userRepository.findByEmail(alex.getEmail()).get(0);
     
         // then
         Assertions.assertEquals(found.getEmail(), alex.getEmail());
