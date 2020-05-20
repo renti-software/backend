@@ -29,11 +29,6 @@ public class UserController {
     public List<User> findAll() {
         List<User> found = repository.findAll();
         return found;
-        // if (found.size() != 0)
-        //     return found;
-        // else {
-        //     return Collections.emptyList();
-        // }
     }
 
     // @DeleteMapping("/")
