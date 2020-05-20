@@ -18,17 +18,22 @@ public class UserController {
     @Autowired
     UserRepository repository;
 
-
-    // @PutMapping("/")
-    // public String create(@RequestBody Localizacao localizacao) {
-    //     repository.save(localizacao);
-    //     return "Localização criada";
-    // }
-
     @GetMapping("/")
     public List<User> findAll() {
         List<User> found = repository.findAll();
         return found;
+    }
+
+    @PostMapping("/")
+    public Long create(@RequestBody User user) {
+        repository.save(user);
+        return user.getId();
+    }
+
+    @GetMapping("/name/{name}")
+    public User getUserByName(@RequestParam String name) {
+        User u = repository.findByName(name);
+        return u;
     }
 
     // @DeleteMapping("/")
