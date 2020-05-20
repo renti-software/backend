@@ -11,7 +11,13 @@ include:
 .template: &install_docker_compose
     image: docker/compose:latest
     services:
-        - docker:dind
+      - docker:dind
+    variables:
+      # Create the certificates inside this directory for both the server
+      # and client. The certificates used by the client will be created in
+      # /certs/client so we only need to share this directory with the
+      # volume mount in `config.toml`.
+      DOCKER_TLS_CERTDIR: "/certs"
 
 code_quality:
     stage: tests
