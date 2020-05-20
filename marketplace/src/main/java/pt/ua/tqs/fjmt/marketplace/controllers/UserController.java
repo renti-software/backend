@@ -34,20 +34,25 @@ public class UserController {
         List<User> found = new ArrayList<>();
         if (name != null) {
             found = repository.findByName(name);
+            if (found.size() == 0) {
+                throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found"
+                );
+            }
         }
         else if (id != null) {
             Optional<User> u = repository.findById(id);
             if (u.isPresent()) {
                 found.add(u.get());
             }
+            else {
+                throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found"
+                );
+            }
         }
         else {
             found = repository.findAll();
-        }
-        if (found.size() == 0) {
-            throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User not found"
-            );
         }
         return found;
     }
