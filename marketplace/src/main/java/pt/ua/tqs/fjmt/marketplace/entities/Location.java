@@ -14,14 +14,14 @@ public class Location {
   @GeneratedValue 
   private Long id;
 
-  private String city_name;
+  private String cityName;
 
   private String country;
 
   public Location() {}
 
-  public Location(String city_name, String country) {
-    this.city_name = city_name;
+  public Location(String cityName, String country) {
+    this.cityName = cityName;
     this.country = country;
   }
 }
