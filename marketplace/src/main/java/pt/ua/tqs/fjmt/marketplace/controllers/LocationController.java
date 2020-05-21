@@ -31,8 +31,9 @@ public class LocationController {
     }
 
     @PostMapping("")
-    public void addLocation(@RequestBody Location location){
+    public Long addLocation(@RequestBody Location location){
         locationRepository.save(location);
+        return location.getId();
     }
 
 }
