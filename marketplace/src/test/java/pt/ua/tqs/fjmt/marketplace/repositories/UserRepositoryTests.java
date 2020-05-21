@@ -87,6 +87,7 @@ public class UserRepositoryTests {
     public void whenFindByLocation_thenReturnUser() {
         // given
         Location aveiro = new Location("Aveiro", "Portugal");
+        entityManager.persist(aveiro);
         User alex = new User("alex", "alex@mail.com", aveiro, "");
         entityManager.persist(alex);
         entityManager.flush();

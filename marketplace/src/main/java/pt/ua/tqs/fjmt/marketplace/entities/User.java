@@ -24,7 +24,7 @@ public class User {
   
   private String email;
   
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.MERGE)
   private Location location;
   
   private String password;

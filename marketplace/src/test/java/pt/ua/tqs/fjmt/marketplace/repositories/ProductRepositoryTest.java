@@ -35,6 +35,7 @@ class ProductRepositoryTest {
     @DisplayName("After product is on the DB, a query should return it")
     public void whenFindByName_thenReturnProduct() {
         User chico = new User("chico", "", null, "");
+        entityManager.persist(chico);
         Product product = new Product("Car", "", "", 0.0f, null, chico);
         entityManager.persist(product);
         entityManager.flush();
@@ -49,6 +50,7 @@ class ProductRepositoryTest {
     public void whenFindAll_thenReturnAll() {
         int n_products = 2;
         User chico = new User("chico", "", null, "");
+        entityManager.persist(chico);
         Product p1 = new Product("Car", "", "", 0.0f, null, chico);
         Product p2 = new Product("Car", "", "", 0.0f, null, chico);
         entityManager.persist(p1);
@@ -64,6 +66,7 @@ class ProductRepositoryTest {
     @DisplayName("Repository should allow search by category")
     public void whenFindByCategory_thenReturnProduct() {
         User chico = new User("chico", "", null, "");
+        entityManager.persist(chico);
         Product p1 = new Product("Car", "Carros", "", 0.0f, null, chico);
         entityManager.persist(p1);
         entityManager.flush();
@@ -77,6 +80,7 @@ class ProductRepositoryTest {
     @DisplayName("Repository should allow search by price")
     public void whenFindByPrice_thenReturnProduct() {
         User chico = new User("chico", "", null, "");
+        entityManager.persist(chico);
         Product p1 = new Product("Car", "Carros", "", 120.34f, null, chico);
         entityManager.persist(p1);
         entityManager.flush();
