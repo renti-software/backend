@@ -31,15 +31,14 @@ public class UserController {
     @GetMapping("/{id}")
     public Optional<User> getUser(@PathVariable("id") Long id) {
         Optional<User> u = repository.findById(id);
-        return u;
-        // if (u.isPresent()) {
-        //     found.add(u.get());
-        // }
-        // else {
-        //     throw new ResponseStatusException(
-        //         HttpStatus.NOT_FOUND, "User not found"
-        //     );
-        // }
+        if (u.isPresent()) {
+            return u;
+        }
+        else {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "User not found"
+            );
+        }
     }
 
     @GetMapping("")
