@@ -22,7 +22,7 @@ public class UserController {
     @Autowired
     UserRepository repository;
 
-    @PostMapping("/")
+    @PostMapping("")
     public Long create(@RequestBody User user) {
         repository.save(user);
         return user.getId();
