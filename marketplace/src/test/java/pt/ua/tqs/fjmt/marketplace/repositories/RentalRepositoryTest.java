@@ -56,8 +56,11 @@ class RentalRepositoryTest {
     @DisplayName("Repository should allow search by product")
     public void whenFindByProduct_thenReturnRental() {
         User chico = new User("chico", "", null, "");
+        entityManager.persist(chico);
         User chico2 = new User("chico2", "", null, "");
+        entityManager.persist(chico2);
         Product product = new Product("Car", "", "", 0.0f, null, chico);
+        entityManager.persist(product);
         Rental rental = new Rental(chico2, product, LocalDate.now(), LocalDate.now());
         entityManager.persist(rental);
         entityManager.flush();
@@ -71,8 +74,11 @@ class RentalRepositoryTest {
     @DisplayName("Repository should allow search by renter")
     public void whenFindByRenter_thenReturnProduct() {
         User chico = new User("chico", "", null, "");
+        entityManager.persist(chico);
         User chico2 = new User("chico2", "", null, "");
+        entityManager.persist(chico2);
         Product product = new Product("Car", "", "", 0.0f, null, chico);
+        entityManager.persist(product);
         Rental rental = new Rental(chico2, product, LocalDate.now(), LocalDate.now());
         entityManager.persist(rental);
         entityManager.flush();
