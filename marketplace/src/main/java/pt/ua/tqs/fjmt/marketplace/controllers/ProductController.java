@@ -86,7 +86,7 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public void addProduct(Product product){
+    public void addProduct(@RequestBody Product product){
         productRepository.save(product);
     }
 
