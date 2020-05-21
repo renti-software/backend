@@ -28,24 +28,26 @@ public class UserController {
         return user.getId();
     }
 
+    @GetMapping("/{id}")
+    public Optional<User> getUser(@PathVariable("id") Long id) {
+        Optional<User> u = repository.findById(id);
+        return u;
+        // if (u.isPresent()) {
+        //     found.add(u.get());
+        // }
+        // else {
+        //     throw new ResponseStatusException(
+        //         HttpStatus.NOT_FOUND, "User not found"
+        //     );
+        // }
+    }
+
     @GetMapping("")
-    public List<User> getUserByName(@RequestParam(required = false) String name,
-                                    @RequestParam(required = false) Long id) {
+    public List<User> filterUser(@RequestParam(required = false) String name) {
         List<User> found = new ArrayList<>();
         if (name != null) {
             found = repository.findByName(name);
             if (found.size() == 0) {
-                throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "User not found"
-                );
-            }
-        }
-        else if (id != null) {
-            Optional<User> u = repository.findById(id);
-            if (u.isPresent()) {
-                found.add(u.get());
-            }
-            else {
                 throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "User not found"
                 );
