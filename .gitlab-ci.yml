@@ -29,6 +29,7 @@ code_quality:
 maven_tests:
   stage: tests
   image: maven
+  allow_failiure: true
   script:
     - cd marketplace
     - mvn test
