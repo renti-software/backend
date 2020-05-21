@@ -46,7 +46,7 @@ public class UserControllerTests {
     @Test
     @DisplayName("Should return 404 when user not found")
     public void whenUserDoesNotExist_thenReturnsNotFound() throws Exception {
-        mockMvc.perform(get("/users?id=1462")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/users/1462")).andExpect(status().isNotFound());
     }
 
     @Test
