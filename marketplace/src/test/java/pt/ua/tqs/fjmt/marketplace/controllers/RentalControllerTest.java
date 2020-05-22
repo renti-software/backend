@@ -1,14 +1,16 @@
 package pt.ua.tqs.fjmt.marketplace.controllers;
 
-import org.apache.tomcat.util.http.parser.MediaType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
+import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -16,6 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import pt.ua.tqs.fjmt.marketplace.MarketplaceApplication;
+import pt.ua.tqs.fjmt.marketplace.entities.Location;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
 import pt.ua.tqs.fjmt.marketplace.entities.Rental;
 import pt.ua.tqs.fjmt.marketplace.entities.User;
@@ -23,6 +27,9 @@ import pt.ua.tqs.fjmt.marketplace.repositories.RentalRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = MarketplaceApplication.class)
+@AutoConfigureMockMvc
+@AutoConfigureTestDatabase
 class RentalControllerTest {
 
     @Autowired
@@ -51,6 +58,31 @@ class RentalControllerTest {
 
         mockMvc.perform(postRental("/rentals", rental))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Get request should return a JSON Object")
+    public void whenGetRequest_thenReturnsJSON() throws Exception {
+        User chico = new User("chico", "", null, "");
+        Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
+        User renter = new User();
+        Rental rental = new Rental(renter, product);
+        mockMvc.perform(postRental("/rentals", rental));
+        mockMvc.perform(get("/rentals/" + rental.getId()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    @DisplayName("Get request should return 404 when Rental not found")
+    public void whenGetRequest_thenReturns404() throws Exception {
+        // given 
+        rentalRepository.deleteAll();
+
+        mockMvc.perform(get("/rentals/1"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     private static MockHttpServletRequestBuilder postRental (String url, Rental r) {
