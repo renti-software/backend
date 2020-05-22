@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.http.MediaType;
@@ -37,6 +38,9 @@ class RentalControllerTest {
 
     @MockBean
     private RentalRepository rentalRepository;
+
+    @Autowired
+    ApplicationContext context;
 
     @BeforeEach
     void setUp() {
@@ -68,7 +72,6 @@ class RentalControllerTest {
         User renter = new User();
         Rental rental = new Rental(renter, product);
 
-
         String id = mockMvc.perform(postRental("/rentals", rental)).andReturn().getResponse().getContentAsString();
         System.out.println(id);
 
@@ -97,9 +100,12 @@ class RentalControllerTest {
         User renter = new User();
         Rental rental = new Rental(renter, product);
 
-
         String id = mockMvc.perform(postRental("/rentals", rental)).andReturn().getResponse().getContentAsString();
         System.out.println(id);
+        // RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        // Rental res = rentalRepositoryFromContext.save(rental);
+        // System.out.println("Got res: " + res);
+        id = "1";
 
         mockMvc.perform(get("/rentals/" + id + "/product"))
                 .andDo(print())
@@ -115,9 +121,13 @@ class RentalControllerTest {
         User renter = new User();
         Rental rental = new Rental(renter, product);
 
-
         String id = mockMvc.perform(postRental("/rentals", rental)).andReturn().getResponse().getContentAsString();
-        System.out.println(id);
+        System.out.println("Got id: " + id);
+        // RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        // System.out.println("Got repo: " + rentalRepositoryFromContext);
+        // Rental res = rentalRepositoryFromContext.save(rental);
+        // System.out.println("Got res: " + res);
+        id = "1";
 
         mockMvc.perform(get("/rentals/" + id + "/renter"))
                 .andDo(print())
