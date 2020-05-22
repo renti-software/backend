@@ -132,7 +132,7 @@ class RentalControllerTest {
         // mockMvc.perform(get("/rentals/" + id + "/renter"))
         //         .andDo(print())
         //         .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+                // .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
 
     private static MockHttpServletRequestBuilder postRental (String url, Rental r) {
