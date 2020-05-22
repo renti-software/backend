@@ -89,6 +89,42 @@ class RentalControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    @DisplayName("Controller should allow to fetch nested Product")
+    public void whenNestedGet_thenReturnProduct() throws Exception {
+        User chico = new User("chico", "", null, "");
+        Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
+        User renter = new User();
+        Rental rental = new Rental(renter, product);
+
+
+        String id = mockMvc.perform(postRental("/rentals", rental)).andReturn().getResponse().getContentAsString();
+        System.out.println(id);
+
+        mockMvc.perform(get("/rentals/" + id + "/product"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    @DisplayName("Controller should allow to fetch nested Renter")
+    public void whenNestedGet_thenReturnRenter() throws Exception {
+        User chico = new User("chico", "", null, "");
+        Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
+        User renter = new User();
+        Rental rental = new Rental(renter, product);
+
+
+        String id = mockMvc.perform(postRental("/rentals", rental)).andReturn().getResponse().getContentAsString();
+        System.out.println(id);
+
+        mockMvc.perform(get("/rentals/" + id + "/renter"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
     private static MockHttpServletRequestBuilder postRental (String url, Rental r) {
         return post(url)
                 .contentType(MediaType.APPLICATION_JSON)
