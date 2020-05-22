@@ -104,4 +104,17 @@ class RentalRepositoryTest {
         Assertions.assertTrue(found.isPresent());
         Assertions.assertEquals(r.getId(), found.get().getId());
     }
+
+    @Test
+    @DisplayName("Repository should return nothing when Rental does not exist")
+    public void whenFindbyId_thenReturnNone() {
+        //given
+        // entityManager cleared
+
+        //when
+        Optional<Rental> found = rentalRepository.findById((long) 1);
+
+        //then
+        Assertions.assertFalse(found.isPresent());
+    }
 }
