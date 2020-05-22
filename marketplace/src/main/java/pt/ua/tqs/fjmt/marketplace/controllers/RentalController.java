@@ -66,6 +66,7 @@ public class RentalController {
     @GetMapping("/{id}/product")
     public Product getProduct(@PathVariable("id") Long id){
         Optional<Rental> found = rentalRepository.findById(id);
+        System.out.println(found);
         if (found.isPresent()) {
             return found.get().getProduct();
         }
@@ -90,8 +91,7 @@ public class RentalController {
     }
 
     @PostMapping("")
-    public Long addRental(Rental rental){
-        rentalRepository.save(rental);
-        return rental.getId();
+    public Rental addRental(@RequestBody Rental rental){
+        return rentalRepository.save(rental);
     }
 }
