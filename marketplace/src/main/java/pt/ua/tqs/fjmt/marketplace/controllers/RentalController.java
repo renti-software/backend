@@ -63,6 +63,32 @@ public class RentalController {
         }
     }
 
+    @GetMapping("/{id}/product")
+    public Optional<Rental> getProduct(@PathVariable("id") Long id){
+        Optional<Rental> found = rentalRepository.findById(id);
+        if (found.isPresent()) {
+            return found;
+        }
+        else {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Rental not found"
+            );
+        }
+    }
+
+    @GetMapping("/{id}/renter")
+    public Optional<Rental> getRenter(@PathVariable("id") Long id){
+        Optional<Rental> found = rentalRepository.findById(id);
+        if (found.isPresent()) {
+            return found;
+        }
+        else {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Rental not found"
+            );
+        }
+    }
+
     @PostMapping("")
     public Long addRental(Rental rental){
         rentalRepository.save(rental);
