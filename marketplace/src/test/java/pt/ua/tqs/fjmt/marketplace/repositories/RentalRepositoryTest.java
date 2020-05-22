@@ -37,15 +37,21 @@ class RentalRepositoryTest {
     @DisplayName("FindAll should return equal number of rentals as inserted")
     public void whenFindAll_thenReturnAll() {
         int n_rentals = 2;
+
         User chico = new User("chico", "", null, "");
+        entityManager.persist(chico);
         User chico2 = new User("chico2", "", null, "");
+        entityManager.persist(chico2);
         Product p1 = new Product("Car", "", "", 0.0f, null, chico);
+        entityManager.persist(p1);
         Product p2 = new Product("Car", "", "", 0.0f, null, chico2);
+        entityManager.persist(p2);
+
         Rental r1 = new Rental(chico2, p1, LocalDate.now(), LocalDate.now());
         Rental r2 = new Rental(chico, p2, LocalDate.now(), LocalDate.now());
-
         entityManager.persist(r1);
         entityManager.persist(r2);
+
         entityManager.flush();
 
         List<Rental> found = rentalRepository.findAll();
