@@ -14,6 +14,7 @@ import pt.ua.tqs.fjmt.marketplace.entities.User;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -86,5 +87,21 @@ class RentalRepositoryTest {
         List<Rental> found = rentalRepository.findByRenter(rental.getRenter());
 
         Assertions.assertEquals(found.get(0), rental);
+    }
+
+    @Test
+    @DisplayName("Repository should allow search by id")
+    public void whenFindbyId_thenReturnUser() {
+        //given
+        Rental r = new Rental();
+        entityManager.persist(r);
+        entityManager.flush();
+
+        //when
+        Optional<Rental> found = rentalRepository.findById(r.getId());
+
+        //then
+        Assertions.assertTrue(found.isPresent());
+        Assertions.assertEquals(r.getId(), found.get().getId());
     }
 }
