@@ -1,6 +1,8 @@
 package pt.ua.tqs.fjmt.marketplace.entities;
 
 import lombok.Data;
+import net.bytebuddy.asm.Advice.Local;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,6 +14,7 @@ import java.util.Date;
 @Entity
 @Table(name = "Rental")
 public class Rental {
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
@@ -33,6 +36,10 @@ public class Rental {
         this.product = product;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public Rental(User renter, Product product) {
+        this(renter, product, LocalDate.now(), null);
     }
 
 }
