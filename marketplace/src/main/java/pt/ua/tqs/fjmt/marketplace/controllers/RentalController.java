@@ -64,10 +64,10 @@ public class RentalController {
     }
 
     @GetMapping("/{id}/product")
-    public Optional<Rental> getProduct(@PathVariable("id") Long id){
+    public Product getProduct(@PathVariable("id") Long id){
         Optional<Rental> found = rentalRepository.findById(id);
         if (found.isPresent()) {
-            return found;
+            return found.get().getProduct();
         }
         else {
             throw new ResponseStatusException(
@@ -77,10 +77,10 @@ public class RentalController {
     }
 
     @GetMapping("/{id}/renter")
-    public Optional<Rental> getRenter(@PathVariable("id") Long id){
+    public User getRenter(@PathVariable("id") Long id){
         Optional<Rental> found = rentalRepository.findById(id);
         if (found.isPresent()) {
-            return found;
+            return found.get().getRenter();
         }
         else {
             throw new ResponseStatusException(
