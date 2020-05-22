@@ -10,9 +10,9 @@ import java.util.List;
 
 @Repository
 public interface RentalRepository extends JpaRepository<Rental, Long> {
+
     public List<Rental> findAll();
+    public List<Rental> findByRenter(User renter);
+    public List<Rental> findByProduct(Product product);
 
-    List<Rental> findByRenter(User renter);
-
-    List<Rental> findByProduct(Product product);
 }
