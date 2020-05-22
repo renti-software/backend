@@ -67,8 +67,12 @@ class RentalControllerTest {
         Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
         User renter = new User();
         Rental rental = new Rental(renter, product);
-        mockMvc.perform(postRental("/rentals", rental));
-        mockMvc.perform(get("/rentals/" + rental.getId()))
+
+
+        String id = mockMvc.perform(postRental("/rentals", rental)).andReturn().getResponse().getContentAsString();
+        System.out.println(id);
+
+        mockMvc.perform(get("/rentals/" + id))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
