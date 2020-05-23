@@ -24,7 +24,7 @@ import pt.ua.tqs.fjmt.marketplace.entities.Location;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
 import pt.ua.tqs.fjmt.marketplace.entities.Rental;
 import pt.ua.tqs.fjmt.marketplace.entities.User;
-import pt.ua.tqs.fjmt.marketplace.repositories.RentalRepository;
+import pt.ua.tqs.fjmt.marketplace.repositories.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,9 +55,21 @@ class RentalControllerTest {
     @Test
     @DisplayName("Inserting rental should return 200")
     public void whenCorrectInsertion_thenReturnsOk() throws Exception {
+
         User chico = new User("chico", "", null, "");
+        UserRepository ur = context.getBean(UserRepository.class);
+        ur.save(chico);
+        ur.flush();
+
         Product product = new Product("Car", "", "", 0.0f, null, chico);
+        ProductRepository pr = context.getBean(ProductRepository.class);
+        pr.save(product);
+        pr.flush();
+
         User renter = new User();
+        ur.save(renter);
+        ur.flush();
+
         Rental rental = new Rental(renter, product);
 
         mockMvc.perform(postRental("/rentals", rental))
