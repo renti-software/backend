@@ -3,6 +3,7 @@ package pt.ua.tqs.fjmt.marketplace.controllers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +17,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -44,6 +47,8 @@ class RentalControllerTest {
 
     @BeforeEach
     void setUp() {
+        rentalRepository.deleteAll();
+        rentalRepository.flush();
     }
 
     @Test
@@ -72,27 +77,37 @@ class RentalControllerTest {
 
         Rental rental = new Rental(renter, product);
 
-        System.out.println(rental);
+        Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
 
         mockMvc.perform(postRental("/rentals", rental))
+                .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("Get request should return a JSON Object")
     public void whenGetRequest_thenReturnsJSON() throws Exception {
+
         User chico = new User("chico", "", null, "");
         Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
         User renter = new User();
         Rental rental = new Rental(renter, product);
+        rental.setId(1L);
 
-        String id = mockMvc.perform(postRental("/rentals", rental)).andReturn().getResponse().getContentAsString();
-        System.out.println(id);
+        Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
+        Mockito.when(rentalRepository.findById(rental.getId())).thenReturn(Optional.of(rental));
 
-        mockMvc.perform(get("/rentals/" + id))
+        // mockMvc.perform(postRental("/rentals", rental)).andReturn().getResponse().getContentAsString();
+        RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        rentalRepositoryFromContext.save(rental);
+        rentalRepositoryFromContext.flush();
+        System.out.println(rentalRepositoryFromContext.findAll());
+
+        mockMvc.perform(get("/rentals/" + rental.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+
     }
 
     @Test
@@ -102,51 +117,52 @@ class RentalControllerTest {
         rentalRepository.deleteAll();
 
         mockMvc.perform(get("/rentals/1"))
-                .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @DisplayName("Controller should allow to fetch nested Product")
     public void whenNestedGet_thenReturnProduct() throws Exception {
-        // User chico = new User("chico", "", null, "");
-        // Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
-        // User renter = new User();
-        // Rental rental = new Rental(renter, product);
+        User chico = new User("chico", "", null, "");
+        Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
+        User renter = new User();
+        Rental rental = new Rental(renter, product);
+        rental.setId(1L);
 
-        // String id = mockMvc.perform(postRental("/rentals", rental)).andReturn().getResponse().getContentAsString();
-        // System.out.println(id);
-        // // RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
-        // // Rental res = rentalRepositoryFromContext.save(rental);
-        // // System.out.println("Got res: " + res);
-        // id = "1";
+        Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
+        Mockito.when(rentalRepository.findById(rental.getId())).thenReturn(Optional.of(rental));
 
-        // mockMvc.perform(get("/rentals/" + id + "/product"))
-        //         .andDo(print())
-        //         .andExpect(status().isOk())
-        //         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        rentalRepositoryFromContext.save(rental);
+        rentalRepositoryFromContext.flush();
+
+        mockMvc.perform(get("/rentals/" + rental.getId() + "/product"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
 
     @Test
     @DisplayName("Controller should allow to fetch nested Renter")
     public void whenNestedGet_thenReturnRenter() throws Exception {
-        // User chico = new User("chico", "", null, "");
-        // Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
-        // User renter = new User();
-        // Rental rental = new Rental(renter, product);
+        User chico = new User("chico", "", null, "");
+        Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
+        User renter = new User();
+        Rental rental = new Rental(renter, product);
+        rental.setId(1L);
 
-        // String id = mockMvc.perform(postRental("/rentals", rental)).andReturn().getResponse().getContentAsString();
-        // System.out.println("Got id: " + id);
-        // // RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
-        // // System.out.println("Got repo: " + rentalRepositoryFromContext);
-        // // Rental res = rentalRepositoryFromContext.save(rental);
-        // // System.out.println("Got res: " + res);
-        // id = "1";
+        Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
+        Mockito.when(rentalRepository.findById(rental.getId())).thenReturn(Optional.of(rental));
 
-        // mockMvc.perform(get("/rentals/" + id + "/renter"))
-        //         .andDo(print())
-        //         .andExpect(status().isOk())
-                // .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        rentalRepositoryFromContext.save(rental);
+        rentalRepositoryFromContext.flush();
+
+
+        mockMvc.perform(get("/rentals/" + rental.getId() + "/renter"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
 
     private static MockHttpServletRequestBuilder postRental (String url, Rental r) {
