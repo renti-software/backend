@@ -39,7 +39,7 @@ public class Rental {
     }
 
     public Rental(User renter, Product product) {
-        this(renter, product, LocalDate.now(), null);
+        this(renter, product, null, null);
     }
 
 }

@@ -57,20 +57,22 @@ class RentalControllerTest {
     public void whenCorrectInsertion_thenReturnsOk() throws Exception {
 
         User chico = new User("chico", "", null, "");
-        UserRepository ur = context.getBean(UserRepository.class);
-        ur.save(chico);
-        ur.flush();
+        // UserRepository ur = context.getBean(UserRepository.class);
+        // ur.save(chico);
+        // ur.flush();
 
         Product product = new Product("Car", "", "", 0.0f, null, chico);
-        ProductRepository pr = context.getBean(ProductRepository.class);
-        pr.save(product);
-        pr.flush();
+        // ProductRepository pr = context.getBean(ProductRepository.class);
+        // pr.save(product);
+        // pr.flush();
 
         User renter = new User();
-        ur.save(renter);
-        ur.flush();
+        // ur.save(renter);
+        // ur.flush();
 
         Rental rental = new Rental(renter, product);
+
+        System.out.println(rental);
 
         mockMvc.perform(postRental("/rentals", rental))
                 .andExpect(status().isOk());
