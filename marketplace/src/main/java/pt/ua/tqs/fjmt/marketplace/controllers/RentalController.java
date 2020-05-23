@@ -51,10 +51,10 @@ public class RentalController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Rental> findById(@PathVariable("id") Long id){
+    public Rental findById(@PathVariable("id") Long id){
         Optional<Rental> found = rentalRepository.findById(id);
         if (found.isPresent()) {
-            return found;
+            return found.get();
         }
         else {
             throw new ResponseStatusException(
