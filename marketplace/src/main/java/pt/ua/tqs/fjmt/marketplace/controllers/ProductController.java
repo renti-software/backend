@@ -27,8 +27,8 @@ public class ProductController {
     public List<Product> findProductList(@RequestParam(required = false, name = "name") String name,
                                  @RequestParam(required = false, name = "location") String location,
                                  @RequestParam(required = false, name = "category") String category,
-                                 @RequestParam(required = false, name = "minPrice") double minPrice,
-                                 @RequestParam(required = false, name = "maxPrice") double maxPrice) {
+                                 @RequestParam(required = false, name = "minPrice") Double minPrice,
+                                 @RequestParam(required = false, name = "maxPrice") Double maxPrice) {
         List<Product> found = productService.findAll();
 
         if(name != null){
@@ -43,7 +43,7 @@ public class ProductController {
             productService.filterByCategory(found, category);
         }
 
-        if(minPrice != 0.0 && maxPrice != 0.0){
+        if(minPrice != null && maxPrice != null){
             productService.filterByPriceRange(found, minPrice, maxPrice);
         }
         return found;
