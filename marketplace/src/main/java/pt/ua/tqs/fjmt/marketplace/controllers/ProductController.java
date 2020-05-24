@@ -2,10 +2,13 @@ package pt.ua.tqs.fjmt.marketplace.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pt.ua.tqs.fjmt.marketplace.MarketplaceApplication;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
 import pt.ua.tqs.fjmt.marketplace.repositories.ProductRepository;
+import pt.ua.tqs.fjmt.marketplace.services.ProductService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,76 +21,43 @@ import java.util.Optional;
 public class ProductController {
 
     @Autowired
-    ProductRepository productRepository;
+    ProductService productService;
 
     @GetMapping("")
-    public List<Product> findAll() {return productRepository.findAll();}
+    public List<Product> findProductList(@RequestParam(required = false, name = "name") String name,
+                                 @RequestParam(required = false, name = "location") String location,
+                                 @RequestParam(required = false, name = "category") String category,
+                                 @RequestParam(required = false, name = "minPrice") double minPrice,
+                                 @RequestParam(required = false, name = "maxPrice") double maxPrice) {
+        List<Product> found = productService.findAll();
 
-    @GetMapping("/{id}")
-    public Optional<Product> findbyId(@PathVariable("id") Long id){
-        return productRepository.findById(id);
-    }
-
-    @GetMapping("/name/{name}")
-    public List<Product> findbyName(@PathVariable("name") String name){
-        return productRepository.findByName(name);
-    }
-
-    @GetMapping("/category/{category}")
-    public List<Product> findbyCategory(@PathVariable("category") String category){
-        return productRepository.findByCategory(category);
-    }
-
-    @GetMapping("/price/{price}")
-    public List<Product> findbyPrice(@PathVariable("price") float price){
-        return productRepository.findByPrice(price);
-    }
-
-    @GetMapping("/parameters")
-    public List<Product> findProductWithParameters(@RequestParam(required = false, name = "location") String location,
-                                                   @RequestParam(required = false, name = "category") String category,
-                                                   @RequestParam(required = false, name = "minPrice") float minPrice,
-                                                   @RequestParam(required = false, name = "maxPrice") float maxPrice){
-
-        List<Product> found = productRepository.findAll();
-        Iterator<Product> iterator;
+        if(name != null){
+            productService.filterByName(found, name);
+        }
 
         if(location != null){
-            iterator = found.iterator();
-            while(iterator.hasNext()){
-                Product product = iterator.next();
-                if(!product.getLocation().getCityName().equalsIgnoreCase(location)){
-                    iterator.remove();
-                }
-            }
+            productService.filterByLocation(found, location);
         }
 
         if(category != null){
-            iterator = found.iterator();
-            while(iterator.hasNext()){
-                Product product = iterator.next();
-                if(!product.getCategory().equalsIgnoreCase(category)){
-                    iterator.remove();
-                }
-            }
+            productService.filterByCategory(found, category);
         }
 
-        if(minPrice != 0.0f && maxPrice != 0.0f){
-            iterator = found.iterator();
-            while(iterator.hasNext()){
-                Product product = iterator.next();
-                float price = product.getPrice();
-                if(price < minPrice || price > maxPrice){
-                    iterator.remove();
-                }
-            }
+        if(minPrice != 0.0 && maxPrice != 0.0){
+            productService.filterByPriceRange(found, minPrice, maxPrice);
         }
         return found;
     }
 
+    @GetMapping("/{id}")
+    public Optional<Product> findById(@PathVariable("id") Long id){
+        return productService.findProductById(id);
+    }
+
+
     @PostMapping("")
     public Long addProduct(@RequestBody Product product){
-        productRepository.save(product);
+        productService.saveProduct(product);
         return product.getId();
     }
 
