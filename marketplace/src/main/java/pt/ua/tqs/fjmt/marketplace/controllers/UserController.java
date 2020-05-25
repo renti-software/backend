@@ -23,9 +23,8 @@ public class UserController {
     UserRepository repository;
 
     @PostMapping("")
-    public Long create(@RequestBody User user) {
-        repository.save(user);
-        return user.getId();
+    public User create(@RequestBody User user) {
+        return repository.save(user);
     }
 
     @GetMapping("/{id}")

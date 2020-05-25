@@ -56,9 +56,8 @@ public class ProductController {
 
 
     @PostMapping("")
-    public Long addProduct(@RequestBody Product product){
-        productService.saveProduct(product);
-        return product.getId();
+    public Product addProduct(@RequestBody Product product){
+        return productService.saveProduct(product);
     }
 
 }
