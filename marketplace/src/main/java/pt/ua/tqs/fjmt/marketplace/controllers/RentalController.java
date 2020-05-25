@@ -94,4 +94,22 @@ public class RentalController {
     public Rental addRental(@RequestBody Rental rental){
         return rentalRepository.save(rental);
     }
+
+    @PutMapping("")
+    public Rental editProduct(@RequestBody Rental rental) {
+        return rentalRepository.save(rental);
+    }
+
+    @DeleteMapping("")
+    public String removeRental(@RequestBody Rental rental) {
+        try {
+            rentalRepository.delete(rental);
+            return "Success";
+        }
+        catch (Exception e){
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Error"
+            );
+        }
+    }
 }

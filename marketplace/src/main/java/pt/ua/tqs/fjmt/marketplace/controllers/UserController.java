@@ -57,28 +57,22 @@ public class UserController {
         return found;
     }
 
-    // @DeleteMapping("/")
-    // public String delete(@RequestBody Localizacao localizacao) {
-    //     repository.delete(localizacao);
-    //     return "Localização removida";
-    // }
+    @PutMapping("")
+    public User editUser(@RequestBody User user) {
+        return repository.save(user);
+    }
 
-    // @GetMapping("/searchbycoordenadas/{latitude}/{longitude}")
-    // public List<Localizacao> findbyCoordinates(@PathVariable float latitude, @PathVariable float longitude) {
-    //     return repository.findByLatitudeAndLongitude(latitude, longitude);
-    // }
-
-    // // Procura por cidade ou rua
-    // @GetMapping("/searchLocal/{local}")
-    // public List<Localizacao> findByCity(@PathVariable String local) {
-    //     List<Localizacao> localizacoes = repository.findByCidadeContaining(local);
-    //     localizacoes.addAll(repository.findByMoradaContaining(local));
-    //     return localizacoes;
-    // }
-
-    // @GetMapping("/searchByCity/{cidade}")
-    // public List<Localizacao> find(@PathVariable String cidade) {
-    //     return repository.findByCidadeLike(cidade);
-    // }
+    @DeleteMapping("")
+    public String removeUser(@RequestBody User user) {
+        try {
+            repository.delete(user);
+            return "Success";
+        }
+        catch (Exception e){
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Error"
+            );
+        }
+    }
 
 }

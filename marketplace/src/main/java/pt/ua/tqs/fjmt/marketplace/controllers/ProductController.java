@@ -60,4 +60,21 @@ public class ProductController {
         return productService.saveProduct(product);
     }
 
+    @PutMapping("")
+    public Product editProduct(@RequestBody Product product) {
+        return productService.saveProduct(product);
+    }
+
+    @DeleteMapping("")
+    public String removeProduct(@RequestBody Product product) {
+        try {
+            productService.delete(product);
+            return "Success";
+        }
+        catch (Exception e){
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Error"
+            );
+        }
+    }
 }

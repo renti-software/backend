@@ -21,6 +21,10 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public void delete(Product product) throws Exception {
+        productRepository.delete(product);
+    }
+
     public Optional<Product> findProductById(Long Id){
         return productRepository.findById(Id);
     }
