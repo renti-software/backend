@@ -21,7 +21,7 @@ public class Product {
     
     private String Description;
 
-    private float price;
+    private double price;
 
     @OneToOne(cascade = CascadeType.MERGE)
     private Location location;
@@ -32,7 +32,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String category, String description, float price, Location location, User user) {
+    public Product(String name, String category, String description, double price, Location location, User user) {
         this.name = name;
         this.category = category;
         this.Description = description;

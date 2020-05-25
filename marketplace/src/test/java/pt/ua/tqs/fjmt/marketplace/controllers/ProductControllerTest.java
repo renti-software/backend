@@ -12,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pt.ua.tqs.fjmt.marketplace.MarketplaceApplication;
 import pt.ua.tqs.fjmt.marketplace.entities.Location;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
@@ -36,6 +38,9 @@ class ProductControllerTest {
     @MockBean
     private ProductRepository productRepository;
 
+    @Autowired
+    private ProductController productController;
+
     @BeforeEach
     void setUp() {
     }
@@ -50,26 +55,16 @@ class ProductControllerTest {
     @DisplayName("Inserting product should return 200")
     public void whenCorrectInsertion_thenReturnsOk() throws Exception {
         User chico = new User("chico", "", null, "");
-        Product product = new Product("Car", "", "", 0.0f, null, chico);
-        mockMvc.perform(postProduct("/products", product))
+        Product product = new Product("Car", "", "", 0.0, null, chico);
+        mockMvc.perform( MockMvcRequestBuilders
+                .post("/products")
+                .content(asJsonString(product))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @DisplayName("Inserting 3 different products, and filter with parameters should return only 1")
-    public void test_product_parameters() throws Exception {
-        User chico = new User("chico", "", null, "");
-        Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
-        Product product2 = new Product("Livro", "Livros", "", 120, new Location("Aveiro", "Portugal"), chico);
-        Product product3 = new Product("Car", "Carros", "", 212, new Location("Aveiro", "Portugal"), chico);
-        mockMvc.perform(postProduct("/products", product)).andExpect(status().isOk());
-        mockMvc.perform(postProduct("/products", product2)).andExpect(status().isOk());
-        mockMvc.perform(postProduct("/products", product3)).andExpect(status().isOk());
-        mockMvc.perform(get("/products/parameters?location=Lisboa&category=Carros&minPrice=200&maxPrice=300"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-    }
+
 
     private static MockHttpServletRequestBuilder postProduct (String url, Product p) {
         return post(url)
@@ -77,7 +72,7 @@ class ProductControllerTest {
                 .content(asJsonString(p));
     }
 
-    private static String asJsonString(final Object obj) {
+    public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
         } catch (Exception e) {
