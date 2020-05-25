@@ -2,7 +2,20 @@ package pt.ua.tqs.fjmt.marketplace.entities;
 
 import java.util.HashMap;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import lombok.Data;
+
+@Data
+@Entity
 public class Price {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
 
     HashMap<Integer, Double> priceMap;
 
@@ -26,8 +39,8 @@ public class Price {
         return priceMap.get(numDays);
     }
 
-    public HashMap<Integer, Double> getPriceMap() {
-        return priceMap;
-    }
+    // public HashMap<Integer, Double> getPriceMap() {
+    //     return priceMap;
+    // }
     
 }
