@@ -23,7 +23,7 @@ public class Product {
     
     private String Description;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.ALL)
     private Price price;
 
     @OneToOne(cascade = CascadeType.MERGE)
@@ -49,6 +49,15 @@ public class Product {
         this.category = category;
         this.Description = description;
         this.price = new Price(prices);
+        this.location = location;
+        this.user = user;
+    }
+
+    public Product(String name, String category, String description, Price price, Location location, User user) {
+        this.name = name;
+        this.category = category;
+        this.Description = description;
+        this.price = price;
         this.location = location;
         this.user = user;
     }
