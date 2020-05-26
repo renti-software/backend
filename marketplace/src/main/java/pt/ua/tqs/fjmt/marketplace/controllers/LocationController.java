@@ -2,7 +2,10 @@ package pt.ua.tqs.fjmt.marketplace.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import pt.ua.tqs.fjmt.marketplace.MarketplaceApplication;
 import pt.ua.tqs.fjmt.marketplace.entities.Location;
 import pt.ua.tqs.fjmt.marketplace.repositories.LocationRepository;
@@ -31,9 +34,26 @@ public class LocationController {
     }
 
     @PostMapping("")
-    public Long addLocation(@RequestBody Location location){
-        locationRepository.save(location);
-        return location.getId();
+    public Location addLocation(@RequestBody Location location){
+        return locationRepository.save(location);
+    }
+
+    @PutMapping("")
+    public Location editLocation(@RequestBody Location location) {
+        return locationRepository.save(location);
+    }
+
+    @DeleteMapping("")
+    public String removeLocation(@RequestBody Location location) {
+        try {
+            locationRepository.delete(location);
+            return "Success";
+        }
+        catch (Exception e){
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Error"
+            );
+        }
     }
 
 }
