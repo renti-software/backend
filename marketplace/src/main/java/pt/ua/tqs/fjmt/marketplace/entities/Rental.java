@@ -26,7 +26,10 @@ public class Rental {
     private Product product;
 
     private LocalDate startDate;
+
     private LocalDate endDate;
+
+    private Boolean approved;
 
     public Rental() {
     }
@@ -36,6 +39,7 @@ public class Rental {
         this.product = product;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.approved = false;
     }
 
     public Rental(User renter, Product product) {
