@@ -32,19 +32,19 @@ public class ProductController {
         List<Product> found = productService.findAll();
 
         if(name != null){
-            productService.filterByName(found, name);
+            found = productService.filterByName(found, name);
         }
 
         if(location != null){
-            productService.filterByLocation(found, location);
+            found = productService.filterByLocation(found, location);
         }
 
         if(category != null){
-            productService.filterByCategory(found, category);
+            found = productService.filterByCategory(found, category);
         }
 
         if(minPrice != null && maxPrice != null){
-            productService.filterByPriceRange(found, minPrice, maxPrice);
+            found = productService.filterByPriceRange(found, minPrice, maxPrice);
         }
         return found;
     }

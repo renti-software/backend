@@ -36,7 +36,7 @@ class ProductRepositoryTest {
     public void whenFindByName_thenReturnProduct() {
         User chico = new User("chico", "", null, "");
         entityManager.persist(chico);
-        Product product = new Product("Car", "", "", 0.0, null, chico);
+        Product product = new Product("Car", "", "", 0.0, "", null, chico);
         entityManager.persist(product);
         entityManager.flush();
 
@@ -51,8 +51,8 @@ class ProductRepositoryTest {
         int n_products = 2;
         User chico = new User("chico", "", null, "");
         entityManager.persist(chico);
-        Product p1 = new Product("Car", "", "", 0.0, null, chico);
-        Product p2 = new Product("Car", "", "", 0.0, null, chico);
+        Product p1 = new Product("Car", "", "", 0.0, "", null, chico);
+        Product p2 = new Product("Car", "", "", 0.0, "", null, chico);
         entityManager.persist(p1);
         entityManager.persist(p2);
         entityManager.flush();
@@ -67,7 +67,7 @@ class ProductRepositoryTest {
     public void whenFindByCategory_thenReturnProduct() {
         User chico = new User("chico", "", null, "");
         entityManager.persist(chico);
-        Product p1 = new Product("Car", "Carros", "", 0.0, null, chico);
+        Product p1 = new Product("Car", "Carros", "", 0.0, "", null, chico);
         entityManager.persist(p1);
         entityManager.flush();
 
@@ -82,7 +82,7 @@ class ProductRepositoryTest {
         User chico = new User("chico", "", null, "");
         entityManager.persist(chico);
         Price price = new Price(120.34);
-        Product p1 = new Product("Car", "Carros", "", price, null, chico);
+        Product p1 = new Product("Car", "Carros", "", price, "", null, chico);
         entityManager.persist(p1);
         entityManager.flush();
 

@@ -55,7 +55,7 @@ class ProductControllerTest {
     @DisplayName("Inserting product should return 200")
     public void whenCorrectInsertion_thenReturnsOk() throws Exception {
         User chico = new User("chico", "", null, "");
-        Product product = new Product("Car", "", "", 0.0, null, chico);
+        Product product = new Product("Car", "", "", 0.0, "", null, chico);
         mockMvc.perform( MockMvcRequestBuilders
                 .post("/products")
                 .content(asJsonString(product))
