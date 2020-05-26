@@ -46,12 +46,24 @@ public class ProductController {
         if(minPrice != null && maxPrice != null){
             found = productService.filterByPriceRange(found, minPrice, maxPrice);
         }
+
+        if(found == null){
+            found = new ArrayList<>();
+        }
         return found;
     }
 
     @GetMapping("/{id}")
-    public Optional<Product> findById(@PathVariable("id") Long id){
-        return productService.findProductById(id);
+    public Product findById(@PathVariable("id") Long id){
+        Optional<Product> found = productService.findProductById(id);
+        if(found.isPresent()){
+            return found.get();
+        }
+        else{
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Product not found"
+            );
+        }
     }
 
 
