@@ -6,6 +6,7 @@ import pt.ua.tqs.fjmt.marketplace.entities.Location;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
 import pt.ua.tqs.fjmt.marketplace.repositories.ProductRepository;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -74,6 +75,27 @@ public class ProductService {
             String productName = product.getName();
             if(!productName.contains(name)){
                 iterator.remove();
+            }
+        }
+        return found;
+    }
+
+    public List<Product> orderByParameter(List<Product> found, String orderParameter, String order) {
+        if(orderParameter.equalsIgnoreCase("name")){
+            if(order.equalsIgnoreCase("desc")){
+                Collections.sort(found, Product.ProdNameComparatorDesc);
+            }
+            else if(order.equalsIgnoreCase("asc")){
+                Collections.sort(found, Product.ProdNameComparatorAsc);
+            }
+        }
+
+        if(orderParameter.equalsIgnoreCase("price")){
+            if(order.equalsIgnoreCase("desc")){
+                Collections.sort(found, Product.ProdPriceComparatorDesc);
+            }
+            else if(order.equalsIgnoreCase("asc")){
+                Collections.sort(found, Product.ProdPriceComparatorAsc);
             }
         }
         return found;

@@ -25,10 +25,13 @@ public class ProductController {
 
     @GetMapping("")
     public List<Product> findProductList(@RequestParam(required = false, name = "name") String name,
-                                 @RequestParam(required = false, name = "location") String location,
-                                 @RequestParam(required = false, name = "category") String category,
-                                 @RequestParam(required = false, name = "minPrice") Double minPrice,
-                                 @RequestParam(required = false, name = "maxPrice") Double maxPrice) {
+                                         @RequestParam(required = false, name = "location") String location,
+                                         @RequestParam(required = false, name = "category") String category,
+                                         @RequestParam(required = false, name = "minPrice") Double minPrice,
+                                         @RequestParam(required = false, name = "maxPrice") Double maxPrice,
+                                         @RequestParam(required = false, name = "orderParameter") String orderParameter,
+                                         @RequestParam(required = false, name = "order") String order) {
+
         List<Product> found = productService.findAll();
 
         if(name != null){
@@ -45,6 +48,10 @@ public class ProductController {
 
         if(minPrice != null && maxPrice != null){
             found = productService.filterByPriceRange(found, minPrice, maxPrice);
+        }
+
+        if(orderParameter != null && order != null){
+            found = productService.orderByParameter(found, orderParameter, order);
         }
 
         if(found == null){

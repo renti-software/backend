@@ -330,6 +330,133 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$", hasSize(1)));
     }
 
+    @Test
+    @DisplayName("Get request with order by name asc should return all products that obey those parameters")
+    public void whenGetRequestOrderNameAsc_thenReturnsProductsListOrderedLikeThat() throws Exception {
+        User chico = new User("chico", "", null, "");
+        Location aveiro = new Location("Aveiro", "Portugal");
+        Location porto = new Location("Porto", "Portugal");
+        Product product = new Product("Car", "Veiculos", "", 1.70, "", aveiro, chico);
+        product.setId(1L);
+        Product product2 = new Product("Car2", "Veiculos", "", 12, "", porto, chico);
+        product2.setId(2L);
+        Product product3 = new Product("Arroz", "Comida", "", 120, "", aveiro, chico);
+        product3.setId(3L);
+        Product product4 = new Product("Bomba", "Comida", "", 200.45, "", porto, chico);
+        product4.setId(4L);
+
+        List<Product> products = new ArrayList<>();
+        products.add(product);
+        products.add(product2);
+        products.add(product3);
+        products.add(product4);
+
+        Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
+        Mockito.when(productRepository.findAll()).thenReturn(products);
+
+        ProductRepository productRepositoryFromContext = context.getBean(ProductRepository.class);
+        productRepositoryFromContext.save(product);
+        productRepositoryFromContext.save(product2);
+        productRepositoryFromContext.save(product3);
+        productRepositoryFromContext.save(product4);
+        productRepositoryFromContext.flush();
+
+        System.out.println(productRepositoryFromContext.findAll());
+
+        mockMvc.perform(get("/products?orderParameter=name&order=asc"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].name", is(product3.getName())))
+                .andExpect(jsonPath("$[1].name", is(product4.getName())))
+                .andExpect(jsonPath("$[2].name", is(product.getName())))
+                .andExpect(jsonPath("$[3].name", is(product2.getName())));
+    }
+
+    @Test
+    @DisplayName("Get request with order by price desc should return all products that obey those parameters")
+    public void whenGetRequestOrderPriceDesc_thenReturnsProductsListOrderedLikeThat() throws Exception {
+        User chico = new User("chico", "", null, "");
+        Location aveiro = new Location("Aveiro", "Portugal");
+        Location porto = new Location("Porto", "Portugal");
+        Product product = new Product("Car", "Veiculos", "", 1.70, "", aveiro, chico);
+        product.setId(1L);
+        Product product2 = new Product("Car2", "Veiculos", "", 12, "", porto, chico);
+        product2.setId(2L);
+        Product product3 = new Product("Arroz", "Comida", "", 120, "", aveiro, chico);
+        product3.setId(3L);
+        Product product4 = new Product("Bomba", "Comida", "", 200.45, "", porto, chico);
+        product4.setId(4L);
+
+        List<Product> products = new ArrayList<>();
+        products.add(product);
+        products.add(product2);
+        products.add(product3);
+        products.add(product4);
+
+        Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
+        Mockito.when(productRepository.findAll()).thenReturn(products);
+
+        ProductRepository productRepositoryFromContext = context.getBean(ProductRepository.class);
+        productRepositoryFromContext.save(product);
+        productRepositoryFromContext.save(product2);
+        productRepositoryFromContext.save(product3);
+        productRepositoryFromContext.save(product4);
+        productRepositoryFromContext.flush();
+
+        System.out.println(productRepositoryFromContext.findAll());
+
+        mockMvc.perform(get("/products?orderParameter=price&order=desc"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].name", is(product4.getName())))
+                .andExpect(jsonPath("$[1].name", is(product3.getName())))
+                .andExpect(jsonPath("$[2].name", is(product2.getName())))
+                .andExpect(jsonPath("$[3].name", is(product.getName())));
+    }
+
+    @Test
+    @DisplayName("Get request with filtering and then ordering")
+    public void whenGetRequestForFilterByNameAndOrderByPriceAsc_thenReturnsProductsListFilteredAndOrderedLikeThat() throws Exception {
+        User chico = new User("chico", "", null, "");
+        Location aveiro = new Location("Aveiro", "Portugal");
+        Location porto = new Location("Porto", "Portugal");
+        Product product = new Product("Car", "Veiculos", "", 1.70, "", aveiro, chico);
+        product.setId(1L);
+        Product product2 = new Product("Car2", "Veiculos", "", 12, "", porto, chico);
+        product2.setId(2L);
+        Product product3 = new Product("Arroz", "Comida", "", 120, "", aveiro, chico);
+        product3.setId(3L);
+        Product product4 = new Product("Bomba", "Comida", "", 200.45, "", porto, chico);
+        product4.setId(4L);
+
+        List<Product> products = new ArrayList<>();
+        products.add(product);
+        products.add(product2);
+        products.add(product3);
+        products.add(product4);
+
+        Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
+        Mockito.when(productRepository.findAll()).thenReturn(products);
+
+        ProductRepository productRepositoryFromContext = context.getBean(ProductRepository.class);
+        productRepositoryFromContext.save(product);
+        productRepositoryFromContext.save(product2);
+        productRepositoryFromContext.save(product3);
+        productRepositoryFromContext.save(product4);
+        productRepositoryFromContext.flush();
+
+        System.out.println(productRepositoryFromContext.findAll());
+
+        mockMvc.perform(get("/products?name=Car&orderParameter=price&order=asc"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].name", is(product.getName())))
+                .andExpect(jsonPath("$[1].name", is(product2.getName())));
+    }
+
 
     private static MockHttpServletRequestBuilder postProduct (String url, Product p) {
         return post(url)
