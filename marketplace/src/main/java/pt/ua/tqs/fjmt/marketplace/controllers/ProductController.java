@@ -10,10 +10,7 @@ import pt.ua.tqs.fjmt.marketplace.entities.Product;
 import pt.ua.tqs.fjmt.marketplace.repositories.ProductRepository;
 import pt.ua.tqs.fjmt.marketplace.services.ProductService;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/products")
@@ -71,6 +68,23 @@ public class ProductController {
                     HttpStatus.NOT_FOUND, "Product not found"
             );
         }
+    }
+
+    @GetMapping("/{id}/price")
+    public double findProductPriceForRental(@PathVariable("id") Long id,
+                                            @RequestParam(name = "startDate") String startDate,
+                                            @RequestParam(name = "endDate") String endDate){
+        Optional<Product> found = productService.findProductById(id);
+        if(found.isPresent()){
+            Product p = found.get();
+            return productService.getCalculatedProductPrice(p, startDate, endDate);
+        }
+        else{
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Product not found"
+            );
+        }
+
     }
 
 
