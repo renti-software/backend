@@ -1,15 +1,18 @@
 package pt.ua.tqs.fjmt.marketplace.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Service;
+import pt.ua.tqs.fjmt.marketplace.MarketplaceApplication;
 import pt.ua.tqs.fjmt.marketplace.entities.Location;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
 import pt.ua.tqs.fjmt.marketplace.repositories.ProductRepository;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class ProductService {
@@ -99,5 +102,46 @@ public class ProductService {
             }
         }
         return found;
+    }
+
+    public double getCalculatedProductPrice(Product p, String startDate, String endDate) {
+        double price = 0.0;
+        HashMap<Integer, Double> priceMap = p.getPrices();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        formatter = formatter.withLocale( Locale.US );
+        LocalDate startDate2 = LocalDate.parse(startDate, formatter);
+        LocalDate endDate2 = LocalDate.parse(endDate, formatter);
+        long days = DAYS.between(startDate2, endDate2);
+
+        TreeMap<Integer, Double> sortedPriceMap = new TreeMap<>();
+        sortedPriceMap.putAll(priceMap);
+
+        int count = 1;
+        for(int i : sortedPriceMap.keySet()){
+            if(count == 1){
+                count++;
+                price = sortedPriceMap.get(i);
+                continue;
+            }
+            if(days < i){
+                break;
+            }
+            else{
+                price = sortedPriceMap.get(i);
+            }
+
+        }
+        return price*days;
+    }
+
+    public static void main(String[] args) {
+        HashMap<Integer, Double> map = new HashMap<>();
+        map.put(18, 20.0);
+        map.put(19, 18.0);
+        map.put(20, 15.0);
+
+        ProductService ps = new ProductService();
+        Product p = new Product("car", "", "", map, "", null, null);
+        System.out.println(ps.getCalculatedProductPrice(p, "2020-01-29", "2020-02-14"));
     }
 }

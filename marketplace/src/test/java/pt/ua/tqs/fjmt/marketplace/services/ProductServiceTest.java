@@ -10,6 +10,7 @@ import pt.ua.tqs.fjmt.marketplace.entities.Location;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -136,5 +137,17 @@ class ProductServiceTest {
         Assertions.assertEquals(testList.get(0).getName(), p2.getName());
         Assertions.assertEquals(testList.get(1).getName(), p3.getName());
         Assertions.assertEquals(testList.get(2).getName(), p1.getName());
+    }
+
+    @Test
+    void getCalculatedPrice(){
+        HashMap<Integer, Double> map = new HashMap<>();
+        map.put(1, 20.0);
+        map.put(10, 18.0);
+        map.put(20, 15.0);
+
+        ProductService ps = new ProductService();
+        Product p = new Product("car", "", "", map, "", null, null);
+        Assertions.assertEquals(ps.getCalculatedProductPrice(p, "2020-01-29", "2020-02-14"), 288);
     }
 }
