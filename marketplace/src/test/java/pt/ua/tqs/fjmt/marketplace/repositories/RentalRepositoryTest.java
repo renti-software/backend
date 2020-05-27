@@ -42,9 +42,9 @@ class RentalRepositoryTest {
         entityManager.persist(chico);
         User chico2 = new User("chico2", "", null, "");
         entityManager.persist(chico2);
-        Product p1 = new Product("Car", "", "", 0.0f, null, chico);
+        Product p1 = new Product("Car", "", "", 0.0, "", null, chico);
         entityManager.persist(p1);
-        Product p2 = new Product("Car", "", "", 0.0f, null, chico2);
+        Product p2 = new Product("Car", "", "", 0.0, "", null, chico2);
         entityManager.persist(p2);
 
         Rental r1 = new Rental(chico2, p1, LocalDate.now(), LocalDate.now());
@@ -66,7 +66,7 @@ class RentalRepositoryTest {
         entityManager.persist(chico);
         User chico2 = new User("chico2", "", null, "");
         entityManager.persist(chico2);
-        Product product = new Product("Car", "", "", 0.0f, null, chico);
+        Product product = new Product("Car", "", "", 0.0, "",  null, chico);
         entityManager.persist(product);
         Rental rental = new Rental(chico2, product, LocalDate.now(), LocalDate.now());
         entityManager.persist(rental);
@@ -84,7 +84,7 @@ class RentalRepositoryTest {
         entityManager.persist(chico);
         User chico2 = new User("chico2", "", null, "");
         entityManager.persist(chico2);
-        Product product = new Product("Car", "", "", 0.0f, null, chico);
+        Product product = new Product("Car", "", "", 0.0, "", null, chico);
         entityManager.persist(product);
         Rental rental = new Rental(chico2, product, LocalDate.now(), LocalDate.now());
         entityManager.persist(rental);

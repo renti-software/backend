@@ -23,6 +23,8 @@ public class Product {
     
     private String Description;
 
+    private String imageLink;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Price price;
 
@@ -35,29 +37,32 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String category, String description, double price, Location location, User user) {
+    public Product(String name, String category, String description, double price, String imageLink, Location location, User user) {
         this.name = name;
         this.category = category;
         this.Description = description;
         this.price = new Price(price);
+        this.imageLink = imageLink;
         this.location = location;
         this.user = user;
     }
 
-    public Product(String name, String category, String description, HashMap<Integer, Double> prices, Location location, User user) {
+    public Product(String name, String category, String description, HashMap<Integer, Double> prices, String imageLink, Location location, User user) {
         this.name = name;
         this.category = category;
         this.Description = description;
         this.price = new Price(prices);
+        this.imageLink = imageLink;
         this.location = location;
         this.user = user;
     }
 
-    public Product(String name, String category, String description, Price price, Location location, User user) {
+    public Product(String name, String category, String description, Price price, String imageLink, Location location, User user) {
         this.name = name;
         this.category = category;
         this.Description = description;
         this.price = price;
+        this.imageLink = imageLink;
         this.location = location;
         this.user = user;
     }

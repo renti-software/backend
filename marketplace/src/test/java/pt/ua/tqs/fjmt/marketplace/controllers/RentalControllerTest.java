@@ -66,7 +66,7 @@ class RentalControllerTest {
         // ur.save(chico);
         // ur.flush();
 
-        Product product = new Product("Car", "", "", 0.0f, null, chico);
+        Product product = new Product("Car", "", "", 0.0, "", null, chico);
         // ProductRepository pr = context.getBean(ProductRepository.class);
         // pr.save(product);
         // pr.flush();
@@ -89,7 +89,7 @@ class RentalControllerTest {
     public void whenGetRequest_thenReturnsJSON() throws Exception {
 
         User chico = new User("chico", "", null, "");
-        Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
+        Product product = new Product("Car", "Carros", "", 212, "", new Location("Lisboa", "Portugal"), chico);
         User renter = new User();
         Rental rental = new Rental(renter, product);
         rental.setId(1L);
@@ -124,7 +124,7 @@ class RentalControllerTest {
     @DisplayName("Controller should allow to fetch nested Product")
     public void whenNestedGet_thenReturnProduct() throws Exception {
         User chico = new User("chico", "", null, "");
-        Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
+        Product product = new Product("Car", "Carros", "", 212, "", new Location("Lisboa", "Portugal"), chico);
         User renter = new User();
         Rental rental = new Rental(renter, product);
         rental.setId(1L);
@@ -146,7 +146,7 @@ class RentalControllerTest {
     @DisplayName("Controller should allow to fetch nested Renter")
     public void whenNestedGet_thenReturnRenter() throws Exception {
         User chico = new User("chico", "", null, "");
-        Product product = new Product("Car", "Carros", "", 212, new Location("Lisboa", "Portugal"), chico);
+        Product product = new Product("Car", "Carros", "", 212, "", new Location("Lisboa", "Portugal"), chico);
         User renter = new User();
         Rental rental = new Rental(renter, product);
         rental.setId(1L);
