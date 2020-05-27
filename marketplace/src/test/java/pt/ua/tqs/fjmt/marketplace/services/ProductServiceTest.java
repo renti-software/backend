@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import pt.ua.tqs.fjmt.marketplace.entities.Location;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
+import pt.ua.tqs.fjmt.marketplace.entities.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,12 @@ class ProductServiceTest {
     @Mock
     Product p3;
 
+    @Mock
+    User u1;
+
+    @Mock
+    User u2;
+
     @BeforeEach
     void setUp() {
         productService = new ProductService();
@@ -35,6 +42,9 @@ class ProductServiceTest {
         p1 = Mockito.mock(Product.class);
         p2 = Mockito.mock(Product.class);
         p3 = Mockito.mock(Product.class);
+
+        u1 = Mockito.mock(User.class);
+        u2 = Mockito.mock(User.class);
 
         //define getName()
         Mockito.when(p1.getName()).thenReturn("Carro");
@@ -56,6 +66,14 @@ class ProductServiceTest {
         Mockito.when(p2.getLocation()).thenReturn((new Location("Porto", "Portugal")));
         Mockito.when(p3.getLocation()).thenReturn((new Location("Faro", "Portugal")));
 
+        //define getUser()
+        Mockito.when(p1.getUser()).thenReturn(u1);
+        Mockito.when(p2.getUser()).thenReturn(u2);
+        Mockito.when(p3.getUser()).thenReturn(u1);
+
+        //define User.getId()
+        Mockito.when((u1.getId())).thenReturn(1L);
+        Mockito.when((u2.getId())).thenReturn(2L);
     }
 
     @Test
@@ -149,5 +167,16 @@ class ProductServiceTest {
         ProductService ps = new ProductService();
         Product p = new Product("car", "", "", map, "", null, null);
         Assertions.assertEquals(ps.getCalculatedProductPrice(p, "2020-01-29", "2020-02-14"), 288);
+    }
+
+    @Test
+    void filterByUserId() {
+        List<Product> testList = new ArrayList<>();
+        testList.add(p1);
+        testList.add(p2);
+        testList.add(p3);
+
+        productService.filterByUserId(testList, 1L);
+        Assertions.assertEquals(testList.size(), 2);
     }
 }

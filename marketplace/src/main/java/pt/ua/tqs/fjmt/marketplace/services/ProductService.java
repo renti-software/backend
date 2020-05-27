@@ -134,14 +134,15 @@ public class ProductService {
         return price*days;
     }
 
-    public static void main(String[] args) {
-        HashMap<Integer, Double> map = new HashMap<>();
-        map.put(18, 20.0);
-        map.put(19, 18.0);
-        map.put(20, 15.0);
-
-        ProductService ps = new ProductService();
-        Product p = new Product("car", "", "", map, "", null, null);
-        System.out.println(ps.getCalculatedProductPrice(p, "2020-01-29", "2020-02-14"));
+    public List<Product> filterByUserId(List<Product> found, Long userId) {
+        iterator = found.iterator();
+        while(iterator.hasNext()){
+            Product product = iterator.next();
+            Long uid = product.getUser().getId();
+            if(uid != userId){
+                iterator.remove();
+            }
+        }
+        return found;
     }
 }
