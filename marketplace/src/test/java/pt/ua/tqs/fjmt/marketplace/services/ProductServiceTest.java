@@ -111,4 +111,30 @@ class ProductServiceTest {
         productService.filterByName(testList, "ajsfkajsd");
         Assertions.assertEquals(testList.size(), 0);
     }
+
+    @Test
+    void orderListByNameAsc(){
+        List<Product> testList = new ArrayList<>();
+        testList.add(p1);
+        testList.add(p2);
+        testList.add(p3);
+
+        productService.orderByParameter(testList, "name", "asc");
+        Assertions.assertEquals(testList.get(0).getName(), p3.getName());
+        Assertions.assertEquals(testList.get(1).getName(), p2.getName());
+        Assertions.assertEquals(testList.get(2).getName(), p1.getName());
+    }
+
+    @Test
+    void orderListByPriceDesc(){
+        List<Product> testList = new ArrayList<>();
+        testList.add(p1);
+        testList.add(p2);
+        testList.add(p3);
+
+        productService.orderByParameter(testList, "price", "desc");
+        Assertions.assertEquals(testList.get(0).getName(), p2.getName());
+        Assertions.assertEquals(testList.get(1).getName(), p3.getName());
+        Assertions.assertEquals(testList.get(2).getName(), p1.getName());
+    }
 }
