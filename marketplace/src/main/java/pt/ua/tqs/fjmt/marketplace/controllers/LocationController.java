@@ -1,5 +1,7 @@
 package pt.ua.tqs.fjmt.marketplace.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
@@ -18,31 +20,37 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/locations")
 @CrossOrigin(origins = "*")
+@Api(value = "API for Locations")
 public class LocationController {
 
     @Autowired
     LocationRepository locationRepository;
 
+    @ApiOperation(value = "It will return the list of all existing locations")
     @GetMapping("")
     public List<Location> findAll() {
         return locationRepository.findAll();
     }
 
+    @ApiOperation(value = "It will return a location by its id")
     @GetMapping("/{id}")
     public Optional<Location> findbyId(@PathVariable("id") Long id){
         return locationRepository.findById(id);
     }
 
+    @ApiOperation(value = "It will save a new location")
     @PostMapping("")
     public Location addLocation(@RequestBody Location location){
         return locationRepository.save(location);
     }
 
+    @ApiOperation(value = "It will update an existing location")
     @PutMapping("")
     public Location editLocation(@RequestBody Location location) {
         return locationRepository.save(location);
     }
 
+    @ApiOperation(value = "It will delete an existing location")
     @DeleteMapping("")
     public String removeLocation(@RequestBody Location location) {
         try {

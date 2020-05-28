@@ -1,5 +1,8 @@
 package pt.ua.tqs.fjmt.marketplace.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +20,18 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/rentals")
 @CrossOrigin(origins = "*")
+@Api(value = "API for Rentals")
 public class RentalController {
 
     @Autowired
     RentalRepository rentalRepository;
 
+    @ApiOperation(value = "It will return list of Rentals for a user or a product")
     @GetMapping("")
-    public List<Rental> filter(@RequestParam(required = false) User renter,
-                               @RequestParam(required = false) Product product
+    public List<Rental> filter(@ApiParam(value = "Renter of the rentals")
+                                   @RequestParam(required = false) User renter,
+                               @ApiParam(value = "Product included in the rentals")
+                                    @RequestParam(required = false) Product product
                             ) {
 
         List<Rental> found = new ArrayList<>();
@@ -50,6 +57,7 @@ public class RentalController {
         return found;
     }
 
+    @ApiOperation(value = "It will return Rental by id")
     @GetMapping("/{id}")
     public Rental findById(@PathVariable("id") Long id){
         Optional<Rental> found = rentalRepository.findById(id);
@@ -63,6 +71,7 @@ public class RentalController {
         }
     }
 
+    @ApiOperation(value = "It will return the product associated to a specific Rental")
     @GetMapping("/{id}/product")
     public Product getProduct(@PathVariable("id") Long id){
         Optional<Rental> found = rentalRepository.findById(id);
@@ -77,6 +86,7 @@ public class RentalController {
         }
     }
 
+    @ApiOperation(value = "It will return the renter associated to a specific Rental")
     @GetMapping("/{id}/renter")
     public User getRenter(@PathVariable("id") Long id){
         Optional<Rental> found = rentalRepository.findById(id);
@@ -90,16 +100,19 @@ public class RentalController {
         }
     }
 
+    @ApiOperation(value = "It will save a new rental")
     @PostMapping("")
     public Rental addRental(@RequestBody Rental rental){
         return rentalRepository.save(rental);
     }
 
+    @ApiOperation(value = "It will update an existing rental")
     @PutMapping("")
     public Rental editProduct(@RequestBody Rental rental) {
         return rentalRepository.save(rental);
     }
 
+    @ApiOperation(value = "It will delete an existing rental")
     @DeleteMapping("")
     public String removeRental(@RequestBody Rental rental) {
         try {
