@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pt.ua.tqs.fjmt.marketplace.MarketplaceApplication;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
-import pt.ua.tqs.fjmt.marketplace.entities.ProductRequest;
 import pt.ua.tqs.fjmt.marketplace.repositories.AuthenticatorRepository;
 import pt.ua.tqs.fjmt.marketplace.repositories.ProductRepository;
 import pt.ua.tqs.fjmt.marketplace.services.ProductService;
