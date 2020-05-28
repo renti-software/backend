@@ -32,7 +32,6 @@ public class AuthenticatorController {
 
     @PostMapping("")
     public Authenticator login(@RequestBody LoginForm loginForm){
-        System.out.println(loginForm.getEmail());
         User user = userRepository.findByEmail(loginForm.getEmail()).get(0);
         return authenticatorRepository.save(new Authenticator(user));
     }
