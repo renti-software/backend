@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import pt.ua.tqs.fjmt.marketplace.entities.Authenticator;
+import pt.ua.tqs.fjmt.marketplace.entities.LoginForm;
 import pt.ua.tqs.fjmt.marketplace.entities.User;
 import pt.ua.tqs.fjmt.marketplace.repositories.AuthenticatorRepository;
 import pt.ua.tqs.fjmt.marketplace.repositories.UserRepository;
@@ -29,8 +31,9 @@ public class AuthenticatorController {
     UserRepository userRepository;
 
     @PostMapping("")
-    public Authenticator login(String email, String password){
-        User user = userRepository.findByEmail(email).get(0);
+    public Authenticator login(@RequestBody LoginForm loginForm){
+        System.out.println(loginForm.getEmail());
+        User user = userRepository.findByEmail(loginForm.getEmail()).get(0);
         return authenticatorRepository.save(new Authenticator(user));
     }
 
