@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pt.ua.tqs.fjmt.marketplace.MarketplaceApplication;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
+import pt.ua.tqs.fjmt.marketplace.entities.ProductRequest;
+import pt.ua.tqs.fjmt.marketplace.repositories.AuthenticatorRepository;
 import pt.ua.tqs.fjmt.marketplace.repositories.ProductRepository;
 import pt.ua.tqs.fjmt.marketplace.services.ProductService;
 
@@ -19,6 +21,9 @@ public class ProductController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    AuthenticatorRepository authenticatorRepository;
 
     @GetMapping("")
     public List<Product> findProductList(@RequestParam(required = false, name = "name") String name,
@@ -89,7 +94,16 @@ public class ProductController {
 
 
     @PostMapping("")
-    public Product addProduct(@RequestBody Product product){
+    public Product addProduct(@RequestBody ProductRequest productRequest){
+        // check if Authenticator object exists in DB
+        if (!authenticatorRepository.existsById(productRequest.getAuthenticator().getId())) {
+            throw new ResponseStatusException(
+                HttpStatus.FORBIDDEN, "Access Denied"
+            );
+        }
+
+        // get Product
+        Product product = productRequest.getProduct();
         return productService.saveProduct(product);
     }
 
