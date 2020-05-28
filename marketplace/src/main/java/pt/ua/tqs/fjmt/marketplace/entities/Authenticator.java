@@ -28,4 +28,8 @@ public class Authenticator {
       this.token = user.getId().toString();
   }
 
+  public Authenticator() {
+
+  }
+
 }
