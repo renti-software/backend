@@ -33,6 +33,11 @@ public class AuthenticatorController {
     @PostMapping("")
     public Authenticator login(@RequestBody LoginForm loginForm){
         User user = userRepository.findByEmail(loginForm.getEmail()).get(0);
+        if (!user.getPassword().equals(loginForm.getPassword())) {
+            throw new ResponseStatusException(
+                HttpStatus.FORBIDDEN, "Failed Login"
+            );
+        }
         return authenticatorRepository.save(new Authenticator(user));
     }
 
