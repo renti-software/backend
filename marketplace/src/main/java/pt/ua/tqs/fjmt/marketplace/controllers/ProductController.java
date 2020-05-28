@@ -26,6 +26,7 @@ public class ProductController {
                                          @RequestParam(required = false, name = "category") String category,
                                          @RequestParam(required = false, name = "minPrice") Double minPrice,
                                          @RequestParam(required = false, name = "maxPrice") Double maxPrice,
+                                         @RequestParam(required = false, name = "userId") Long userId,
                                          @RequestParam(required = false, name = "orderParameter") String orderParameter,
                                          @RequestParam(required = false, name = "order") String order) {
 
@@ -47,9 +48,14 @@ public class ProductController {
             found = productService.filterByPriceRange(found, minPrice, maxPrice);
         }
 
+        if(userId != null){
+            found = productService.filterByUserId(found, userId);
+        }
+
         if(orderParameter != null && order != null){
             found = productService.orderByParameter(found, orderParameter, order);
         }
+
 
         if(found == null){
             found = new ArrayList<>();
