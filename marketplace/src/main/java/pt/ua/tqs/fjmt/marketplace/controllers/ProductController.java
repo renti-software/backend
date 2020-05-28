@@ -1,5 +1,8 @@
 package pt.ua.tqs.fjmt.marketplace.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
@@ -15,20 +18,30 @@ import java.util.*;
 @RestController
 @RequestMapping("/products")
 @CrossOrigin(origins = "*")
+@Api(value = "API for Products")
 public class ProductController {
 
     @Autowired
     ProductService productService;
 
+    @ApiOperation(value = "It will return a list of Products that can be filtered and/or ordered. If no parameter is passed returns all products")
     @GetMapping("")
-    public List<Product> findProductList(@RequestParam(required = false, name = "name") String name,
-                                         @RequestParam(required = false, name = "location") String location,
-                                         @RequestParam(required = false, name = "category") String category,
-                                         @RequestParam(required = false, name = "minPrice") Double minPrice,
-                                         @RequestParam(required = false, name = "maxPrice") Double maxPrice,
-                                         @RequestParam(required = false, name = "userId") Long userId,
-                                         @RequestParam(required = false, name = "orderParameter") String orderParameter,
-                                         @RequestParam(required = false, name = "order") String order) {
+    public List<Product> findProductList(@ApiParam("Name of the product to be searched. Optional")
+                                             @RequestParam(required = false, name = "name") String name,
+                                         @ApiParam("City name of the product to be searched. Optional")
+                                            @RequestParam(required = false, name = "location") String location,
+                                         @ApiParam("Category of the product to be searched. Optional")
+                                             @RequestParam(required = false, name = "category") String category,
+                                         @ApiParam("Minimum price of the product to be searched. Optional, but only works in combination with maxPrice")
+                                             @RequestParam(required = false, name = "minPrice") Double minPrice,
+                                         @ApiParam("Maximum of the product to be searched. Optional, but only works in combination with minPrice")
+                                             @RequestParam(required = false, name = "maxPrice") Double maxPrice,
+                                         @ApiParam("Id of owner of the product to be searched. Optional")
+                                             @RequestParam(required = false, name = "userId") Long userId,
+                                         @ApiParam("Parameter to order list of products. Can have values name and price. Optional, but only works in combination with order")
+                                             @RequestParam(required = false, name = "orderParameter") String orderParameter,
+                                         @ApiParam("Defines order sequence of list of products. Can have values asc and desc. Optional, but only works in combination with orderParameter")
+                                             @RequestParam(required = false, name = "order") String order) {
 
         List<Product> found = productService.findAll();
 
@@ -62,9 +75,10 @@ public class ProductController {
         }
         return found;
     }
-
+    @ApiOperation(value = "It will return a Product")
     @GetMapping("/{id}")
-    public Product findById(@PathVariable("id") Long id){
+    public Product findById(@ApiParam("Id of the product. Cannot be empty")
+                                @PathVariable("id") Long id){
         Optional<Product> found = productService.findProductById(id);
         if(found.isPresent()){
             return found.get();
@@ -75,11 +89,14 @@ public class ProductController {
             );
         }
     }
-
+    @ApiOperation(value = "It will return the calculated price of a Product based on the number of days")
     @GetMapping("/{id}/price")
-    public double findProductPriceForRental(@PathVariable("id") Long id,
-                                            @RequestParam(name = "startDate") String startDate,
-                                            @RequestParam(name = "endDate") String endDate){
+    public double findProductPriceForRental(@ApiParam("Id of the product. Cannot be empty")
+                                                @PathVariable("id") Long id,
+                                            @ApiParam("Start date of rental. Required")
+                                                @RequestParam(name = "startDate") String startDate,
+                                            @ApiParam("End date of rental. Required")
+                                                @RequestParam(name = "endDate") String endDate){
         Optional<Product> found = productService.findProductById(id);
         if(found.isPresent()){
             Product p = found.get();
@@ -93,17 +110,19 @@ public class ProductController {
 
     }
 
-
+    @ApiOperation(value = "It will save a new Product in the database and return that same Product")
     @PostMapping("")
     public Product addProduct(@RequestBody Product product){
         return productService.saveProduct(product);
     }
 
+    @ApiOperation(value = "It will update the product and return it")
     @PutMapping("")
     public Product editProduct(@RequestBody Product product) {
         return productService.saveProduct(product);
     }
 
+    @ApiOperation(value = "It will delete the specific product")
     @DeleteMapping("")
     public String removeProduct(@RequestBody Product product) {
         try {
