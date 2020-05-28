@@ -22,9 +22,6 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @Autowired
-    AuthenticatorRepository authenticatorRepository;
-
     @GetMapping("")
     public List<Product> findProductList(@RequestParam(required = false, name = "name") String name,
                                          @RequestParam(required = false, name = "location") String location,
@@ -94,16 +91,7 @@ public class ProductController {
 
 
     @PostMapping("")
-    public Product addProduct(@RequestBody ProductRequest productRequest){
-        // check if Authenticator object exists in DB
-        if (!authenticatorRepository.existsById(productRequest.getAuthenticator().getId())) {
-            throw new ResponseStatusException(
-                HttpStatus.FORBIDDEN, "Access Denied"
-            );
-        }
-
-        // get Product
-        Product product = productRequest.getProduct();
+    public Product addProduct(@RequestBody Product product){
         return productService.saveProduct(product);
     }
 
