@@ -1,5 +1,7 @@
 package pt.ua.tqs.fjmt.marketplace.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
@@ -15,11 +17,13 @@ import java.util.*;
 @RestController
 @RequestMapping("/products")
 @CrossOrigin(origins = "*")
+@Api(value = "API for Products")
 public class ProductController {
 
     @Autowired
     ProductService productService;
 
+    @ApiOperation(value = "It will return list of Products that can be filtered and/or ordered")
     @GetMapping("")
     public List<Product> findProductList(@RequestParam(required = false, name = "name") String name,
                                          @RequestParam(required = false, name = "location") String location,
@@ -62,7 +66,7 @@ public class ProductController {
         }
         return found;
     }
-
+    @ApiOperation(value = "It will return a Product")
     @GetMapping("/{id}")
     public Product findById(@PathVariable("id") Long id){
         Optional<Product> found = productService.findProductById(id);
@@ -75,7 +79,7 @@ public class ProductController {
             );
         }
     }
-
+    @ApiOperation(value = "It will return the calculated price of a Product based on the number of days")
     @GetMapping("/{id}/price")
     public double findProductPriceForRental(@PathVariable("id") Long id,
                                             @RequestParam(name = "startDate") String startDate,
@@ -93,17 +97,19 @@ public class ProductController {
 
     }
 
-
+    @ApiOperation(value = "It will save a new Product in the database and return that same Product")
     @PostMapping("")
     public Product addProduct(@RequestBody Product product){
         return productService.saveProduct(product);
     }
 
+    @ApiOperation(value = "It will update the product and return it")
     @PutMapping("")
     public Product editProduct(@RequestBody Product product) {
         return productService.saveProduct(product);
     }
 
+    @ApiOperation(value = "It will delete the specific product")
     @DeleteMapping("")
     public String removeProduct(@RequestBody Product product) {
         try {
