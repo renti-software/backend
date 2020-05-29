@@ -26,6 +26,12 @@ code_quality:
     artifacts:
         paths: [gl-code-quality-report.json]
 
+code_quality_sonar:
+    stage: tests
+    image: maven
+    script:
+      - mvn sonar:sonar Dsonar.projectKey=Renti-Backend Dsonar.host.url=http://192.168.160.62:9000 Dsonar.login=f5cb79f3acc527a2834d7306185ff88d862c0d5b
+
 maven_tests:
   stage: tests
   image: maven
@@ -77,4 +83,3 @@ deploy:
   trigger: renti-software/compose
   only:
     - master
-
