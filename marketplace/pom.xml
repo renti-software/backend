@@ -88,4 +88,24 @@
 		</plugins>
 	</build>
 
+        <settings>
+            <pluginGroups>
+                <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
+            </pluginGroups>
+            <profiles>
+                <profile>
+                    <id>sonar</id>
+                    <activation>
+                        <activeByDefault>true</activeByDefault>
+                    </activation>
+                    <properties>
+                        <sonar.host.url>
+                          http://192.168.160.62:9000
+                        </sonar.host.url>
+                    </properties>
+                </profile>
+             </profiles>
+        </settings>
+
+
 </project>
