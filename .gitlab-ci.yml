@@ -28,10 +28,16 @@ code_quality:
 
 code_quality_sonar:
     stage: tests
-    image: maven
-    script:
+    image: maven:latest
+    variables:
+      SONAR_TOKEN: "f5cb79f3acc527a2834d7306185ff88d862c0d5b"
+      SONAR_HOST_URL: "http://192.168.160.62:9000"
+      GIT_DEPTH: 0
+    before_script:
       - cd marketplace/
-      - mvn sonar:sonar Dsonar.projectKey=Renti-Backend Dsonar.host.url=http://192.168.160.62:9000 Dsonar.login=f5cb79f3acc527a2834d7306185ff88d862c0d5b
+    script:
+      - mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
+    allow_failure: true
 
 maven_tests:
   stage: tests
