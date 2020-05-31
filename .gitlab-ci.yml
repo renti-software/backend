@@ -26,6 +26,19 @@ code_quality:
     artifacts:
         paths: [gl-code-quality-report.json]
 
+code_quality_sonar:
+    stage: tests
+    image: maven:latest
+    variables:
+      SONAR_TOKEN: "f5cb79f3acc527a2834d7306185ff88d862c0d5b"
+      SONAR_HOST_URL: "http://192.168.160.62:9000"
+      GIT_DEPTH: 0
+    before_script:
+      - cd marketplace/
+    script:
+      - mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
+    allow_failure: true
+
 maven_tests:
   stage: tests
   image: maven
@@ -77,4 +90,3 @@ deploy:
   trigger: renti-software/compose
   only:
     - master
-
