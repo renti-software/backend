@@ -48,6 +48,16 @@ public class Product {
         this.user = user;
     }
 
+    public Product(String name, String category, String description, String price, String imageLink, Location location, User user) {
+        this.name = name;
+        this.category = category;
+        this.Description = description;
+        this.price = new Price(Double.parseDouble(price));
+        this.imageLink = imageLink;
+        this.location = location;
+        this.user = user;
+    }
+
     public Product(String name, String category, String description, HashMap<Integer, Double> prices, String imageLink, Location location, User user) {
         this.name = name;
         this.category = category;

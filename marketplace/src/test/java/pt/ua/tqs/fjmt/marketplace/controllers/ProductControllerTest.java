@@ -77,6 +77,20 @@ class ProductControllerTest {
 
 
     @Test
+    @DisplayName("Inserting product with price as a String should return 200")
+    public void whenCorrectInsertionWithString_thenReturnsOk() throws Exception {
+        User chico = new User("chico", "", null, "");
+        Product product = new Product("Car", "", "", "1", "", null, chico);
+
+        Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
+
+        mockMvc.perform(postProduct("/products", product))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
     @DisplayName("Get request should return a JSON Object for id path")
     public void whenGetRequestID_thenReturnsJSON() throws Exception {
         User chico = new User("chico", "", null, "");
