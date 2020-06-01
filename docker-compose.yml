@@ -10,6 +10,7 @@ services:
         - POSTGRES_PORT=5432
     ports:
       - "8080:8080"
+      - "9000:9000"
     environment: 
       - POSTGRES_USER=spring
       - POSTGRES_PASSWORD=123
