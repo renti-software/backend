@@ -26,8 +26,7 @@ public class Product {
 
     private String imageLink;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Price price;
+    private Double price;
 
     @OneToOne(cascade = CascadeType.MERGE)
     private Location location;
@@ -39,26 +38,6 @@ public class Product {
     }
 
     public Product(String name, String category, String description, double price, String imageLink, Location location, User user) {
-        this.name = name;
-        this.category = category;
-        this.Description = description;
-        this.price = new Price(price);
-        this.imageLink = imageLink;
-        this.location = location;
-        this.user = user;
-    }
-
-    public Product(String name, String category, String description, HashMap<Integer, Double> prices, String imageLink, Location location, User user) {
-        this.name = name;
-        this.category = category;
-        this.Description = description;
-        this.price = new Price(prices);
-        this.imageLink = imageLink;
-        this.location = location;
-        this.user = user;
-    }
-
-    public Product(String name, String category, String description, Price price, String imageLink, Location location, User user) {
         this.name = name;
         this.category = category;
         this.Description = description;
@@ -105,15 +84,7 @@ public class Product {
     };
 
     public Double getPrice() {
-        return price.getPrice();
-    }
-
-    public Double getPrice(int nDays) {
-        return price.getPrice(nDays);
-    }
-
-    public HashMap<Integer, Double> getPrices() {
-        return price.getPriceMap();
+        return price;
     }
 
 }
