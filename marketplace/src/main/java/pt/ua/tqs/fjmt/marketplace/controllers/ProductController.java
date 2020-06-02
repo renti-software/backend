@@ -3,6 +3,10 @@ package pt.ua.tqs.fjmt.marketplace.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
@@ -120,7 +124,15 @@ public class ProductController {
     @ApiOperation(value = "It will update the product and return it")
     @PutMapping("")
     public Product editProduct(@RequestBody Product product) {
-        return productService.saveProduct(product);
+        Optional<Product> p = productService.findProductById(product.getId());
+        if (!p.isPresent()) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Error"
+            );
+        }
+        Product dbProduct = p.get();
+        copyNonNullProperties(product, dbProduct);
+        return productService.saveProduct(dbProduct);
     }
 
     @ApiOperation(value = "It will delete the specific product")
@@ -135,5 +147,22 @@ public class ProductController {
                 HttpStatus.BAD_REQUEST, "Error"
             );
         }
+    }
+
+    public static void copyNonNullProperties(Object src, Object target) {
+        BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
+    }
+
+    public static String[] getNullPropertyNames (Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+        Set<String> emptyNames = new HashSet<String>();
+        for(java.beans.PropertyDescriptor pd : pds) {
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (srcValue == null) emptyNames.add(pd.getName());
+        }
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
     }
 }
