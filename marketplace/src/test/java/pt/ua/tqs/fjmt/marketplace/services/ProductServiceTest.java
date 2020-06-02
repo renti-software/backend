@@ -159,14 +159,11 @@ class ProductServiceTest {
 
     @Test
     void getCalculatedPrice(){
-        HashMap<Integer, Double> map = new HashMap<>();
-        map.put(1, 20.0);
-        map.put(10, 18.0);
-        map.put(20, 15.0);
+        Double price = 20.00;
 
         ProductService ps = new ProductService();
-        Product p = new Product("car", "", "", map, "", null, null);
-        Assertions.assertEquals(ps.getCalculatedProductPrice(p, "2020-01-29", "2020-02-14"), 288);
+        Product p = new Product("car", "", "", price, "", null, null);
+        Assertions.assertEquals(ps.getCalculatedProductPrice(p, "2020-01-29", "2020-02-14"), 320.0);
     }
 
     @Test
