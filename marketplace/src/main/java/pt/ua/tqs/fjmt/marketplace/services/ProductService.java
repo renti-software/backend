@@ -105,32 +105,13 @@ public class ProductService {
     }
 
     public double getCalculatedProductPrice(Product p, String startDate, String endDate) {
-        double price = 0.0;
-        HashMap<Integer, Double> priceMap = p.getPrices();
+        double price = p.getPrice();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         formatter = formatter.withLocale( Locale.US );
         LocalDate startDate2 = LocalDate.parse(startDate, formatter);
         LocalDate endDate2 = LocalDate.parse(endDate, formatter);
         long days = DAYS.between(startDate2, endDate2);
 
-        TreeMap<Integer, Double> sortedPriceMap = new TreeMap<>();
-        sortedPriceMap.putAll(priceMap);
-
-        int count = 1;
-        for(int i : sortedPriceMap.keySet()){
-            if(count == 1){
-                count++;
-                price = sortedPriceMap.get(i);
-                continue;
-            }
-            if(days < i){
-                break;
-            }
-            else{
-                price = sortedPriceMap.get(i);
-            }
-
-        }
         return price*days;
     }
 

@@ -462,12 +462,10 @@ class ProductControllerTest {
     @DisplayName("Get for price should return the calculated price based on the number of days between dates")
     public void whenGetRequestPrice_thenReturnsCalculatedPrice() throws Exception {
         User chico = new User("chico", "", null, "");
-        HashMap<Integer, Double> priceMap = new HashMap<>();
-        priceMap.put(1, 20.0);
-        priceMap.put(10, 18.0);
-        priceMap.put(20, 15.0);
 
-        Product product = new Product("Car", "", "", priceMap, "", null, chico);
+        Double price = 20.00;
+
+        Product product = new Product("Car", "", "", price, "", null, chico);
         product.setId(1L);
 
         Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
@@ -482,7 +480,7 @@ class ProductControllerTest {
         mockMvc.perform(get("/products/" + product.getId() + "/price?startDate=2020-01-29&endDate=2020-02-14"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("288.0"));
+                .andExpect(content().string("320.0"));
     }
 
     @Test

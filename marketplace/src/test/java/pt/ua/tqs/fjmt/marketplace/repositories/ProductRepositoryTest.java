@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
 import pt.ua.tqs.fjmt.marketplace.entities.User;
-import pt.ua.tqs.fjmt.marketplace.entities.Price;
 
 import java.util.List;
 
@@ -81,12 +80,11 @@ class ProductRepositoryTest {
     public void whenFindByPrice_thenReturnProduct() {
         User chico = new User("chico", "", null, "");
         entityManager.persist(chico);
-        Price price = new Price(120.34);
-        Product p1 = new Product("Car", "Carros", "", price, "", null, chico);
+        Product p1 = new Product("Car", "Carros", "", 120.34, "", null, chico);
         entityManager.persist(p1);
         entityManager.flush();
 
-        List<Product> found = productRepository.findByPrice(price);
+        List<Product> found = productRepository.findByPrice(120.34);
 
         Assertions.assertEquals(found.get(0).getPrice(), p1.getPrice());
     }
