@@ -3,7 +3,6 @@ package pt.ua.tqs.fjmt.marketplace.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import pt.ua.tqs.fjmt.marketplace.entities.Price;
 import pt.ua.tqs.fjmt.marketplace.entities.Product;
 //import pt.ua.tqs.fjmt.marketplace.entities.Location;
 
