@@ -21,7 +21,7 @@ public class ProductService {
 
     private Iterator<Product> iterator;
 
-    public Product saveProduct(Product product){
+    public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
 
