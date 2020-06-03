@@ -235,6 +235,52 @@ class RentalControllerTest {
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", is(rental.getId())));
     }
+
+    @Test
+    @DisplayName("Controller should allow to filtering by approval state and product")
+    public void whenFilterByApprovalAndProduct_thenReturnRental() throws Exception {
+        User chico = new User("chico", "", null, "");
+        chico.setId(1L);
+        User chico2 = new User("chico", "", null, "");
+        chico2.setId(2L);
+
+        Location l = new Location("Lisboa", "Portugal");
+
+        Product product = new Product("Car", "Carros", "", 212, "", l, chico);
+        Product product2 = new Product("Car", "Carros", "", 212, "", l, chico2);
+        product2.setId(2L);
+
+        User renter = new User();
+        User renter2 = new User();
+        Rental rental = new Rental(renter, product);
+        Rental rental2 = new Rental(renter2, product);
+        Rental rental3 = new Rental(renter2, product2);
+        rental2.setApproved(true);
+
+        Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
+        Mockito.when(rentalRepository.findByApproved(false)).thenReturn(List.of(rental, rental3));
+        Mockito.when(rentalRepository.findByProductId(product2.getId())).thenReturn(List.of(rental3));
+        Mockito.when(rentalRepository.findAll()).thenReturn(List.of(rental, rental2, rental3));
+
+        RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        rentalRepositoryFromContext.save(rental);
+        rentalRepositoryFromContext.flush();
+        rentalRepositoryFromContext.save(rental2);
+        rentalRepositoryFromContext.flush();
+        rentalRepositoryFromContext.save(rental3);
+        rentalRepositoryFromContext.flush();
+
+
+        Boolean approved = false;
+        Long productId = product2.getId();
+
+        mockMvc.perform(get("/rentals?approved=false&productId=2"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(rental3.getId())));
+    }
     
     @Test
     @DisplayName("Filtering by approval state should return 404 when none approved")
