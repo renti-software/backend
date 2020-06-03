@@ -3,6 +3,10 @@ package pt.ua.tqs.fjmt.marketplace.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +18,10 @@ import pt.ua.tqs.fjmt.marketplace.entities.User;
 import pt.ua.tqs.fjmt.marketplace.repositories.RentalRepository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/rentals")
@@ -145,8 +151,16 @@ public class RentalController {
 
     @ApiOperation(value = "It will update an existing rental")
     @PutMapping("")
-    public Rental editProduct(@RequestBody Rental rental) {
-        return rentalRepository.save(rental);
+    public Rental editRental(@RequestBody Rental rental) {
+        Optional<Rental> r = rentalRepository.findById(rental.getId());
+        if (!r.isPresent()) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Rental Not Found"
+            );
+        }
+        Rental dbRental = r.get();
+        copyNonNullProperties(rental, dbRental);
+        return rentalRepository.save(dbRental);
     }
 
     @ApiOperation(value = "It will delete an existing rental")
@@ -161,5 +175,22 @@ public class RentalController {
                 HttpStatus.BAD_REQUEST, "Error"
             );
         }
+    }
+
+    public static void copyNonNullProperties(Object src, Object target) {
+        BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
+    }
+
+    public static String[] getNullPropertyNames (Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+        Set<String> emptyNames = new HashSet<String>();
+        for(java.beans.PropertyDescriptor pd : pds) {
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (srcValue == null) emptyNames.add(pd.getName());
+        }
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
     }
 }
