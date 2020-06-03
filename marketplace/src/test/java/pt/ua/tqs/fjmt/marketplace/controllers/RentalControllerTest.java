@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.Optional;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -186,6 +187,27 @@ class RentalControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+    
+    @Test
+    @DisplayName("Filtering by approval state should return 404 when none approved")
+    public void whenFilterByApproval_thenReturn404() throws Exception {
+        User chico = new User("chico", "", null, "");
+        Product product = new Product("Car", "Carros", "", 212, "", new Location("Lisboa", "Portugal"), chico);
+        User renter = new User();
+        Rental rental = new Rental(renter, product);
+
+        Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
+        Mockito.when(rentalRepository.findByApproved(true)).thenReturn(new ArrayList<Rental>());
+
+        RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        rentalRepositoryFromContext.save(rental);
+        rentalRepositoryFromContext.flush();
+
+
+        mockMvc.perform(get("/rentals?approved=" + "true"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     private static MockHttpServletRequestBuilder postRental (String url, Rental r) {
