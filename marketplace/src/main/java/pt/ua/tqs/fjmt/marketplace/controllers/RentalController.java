@@ -29,39 +29,66 @@ public class RentalController {
     @ApiOperation(value = "It will return list of Rentals for a user or a product")
     @GetMapping("")
     public List<Rental> filter(@ApiParam(value = "Renter of the rentals")
-                                   @RequestParam(required = false) User renter,
+                                   @RequestParam(required = false, name = "renterId") Long renterId,
                                @ApiParam(value = "Product included in the rentals")
-                                    @RequestParam(required = false) Product product,
+                                    @RequestParam(required = false, name = "productId") Long productId,
                                @ApiParam(value = "Rental approval state")
-                                    @RequestParam(required = false) Boolean approved
+                                    @RequestParam(required = false, name = "approved") Boolean approved,
+                               @ApiParam(value = "Product owner")
+                                    @RequestParam(required = false, name = "ownerId") Long ownerId
                             ) {
 
-        List<Rental> found = new ArrayList<>();
-        if (renter != null) {
-            found = rentalRepository.findByRenter(renter);
+        Boolean all = true;
+        List<Rental> found = null;
+        if (renterId != null) {
+            all = false;
+            found = rentalRepository.findByRenterId(renterId);
             if (found.size() == 0) {
                 throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Rentals not found for this Renter"
                 );
             }
         }
-        else if (product != null) {
-            found = rentalRepository.findByProduct(product);
+        if (productId != null) {
+            all = false;
+            List<Rental> newFound = rentalRepository.findByProductId(productId);
+            if (found == null) {
+                found = new ArrayList<Rental>(newFound);
+            }
+            found.retainAll(newFound);
             if (found.size() == 0) {
                 throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Rentals not found for this Product"
                 );
             }
         }
-        else if (approved != null) {
-            found = rentalRepository.findByApproved(approved);
+        if (approved != null) {
+            all = false;
+            List<Rental> newFound = rentalRepository.findByApproved(approved);
+            if (found == null) {
+                found = new ArrayList<Rental>(newFound);
+            }
+            found.retainAll(newFound);
             if (found.size() == 0) {
                 throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Rentals not found for this Product"
+                    HttpStatus.NOT_FOUND, "Rentals not found for this approval state"
                 );
             }
         }
-        else {
+        if (ownerId != null) {
+            all = false;
+            List<Rental> newFound = rentalRepository.findByProductUserId(ownerId);
+            if (found == null) {
+                found = new ArrayList<Rental>(newFound);
+            }
+            found.retainAll(newFound);
+            if (found.size() == 0) {
+                throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Rentals not found for this Product owner"
+                );
+            }
+        }
+        if (all) {
             found = rentalRepository.findAll();
         }
         return found;
