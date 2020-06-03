@@ -52,6 +52,11 @@ public class FavouritesController {
         return products;
     }
 
+    @GetMapping("")
+    public List<Favourites> findAll(){
+        return favouritesRepository.findAll();
+    }
+
     @ApiOperation(value = "It will add a new Favourite to the DB")
     @PostMapping("")
     public Favourites addFavourites(@RequestBody Favourites favourites){
