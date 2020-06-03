@@ -30,7 +30,7 @@ code_quality_sonar:
     stage: tests
     image: maven:latest
     variables:
-      SONAR_TOKEN: "f5cb79f3acc527a2834d7306185ff88d862c0d5b"
+      SONAR_TOKEN: "ad4d172f43b1515cbc851d7bc914bf50c993e2d7"
       SONAR_HOST_URL: "http://192.168.160.62:9000"
       GIT_DEPTH: 0
     before_script:
