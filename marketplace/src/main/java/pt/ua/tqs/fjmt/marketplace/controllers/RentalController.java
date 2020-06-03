@@ -31,7 +31,9 @@ public class RentalController {
     public List<Rental> filter(@ApiParam(value = "Renter of the rentals")
                                    @RequestParam(required = false) User renter,
                                @ApiParam(value = "Product included in the rentals")
-                                    @RequestParam(required = false) Product product
+                                    @RequestParam(required = false) Product product,
+                               @ApiParam(value = "Rental approval state")
+                                    @RequestParam(required = false) Boolean approved
                             ) {
 
         List<Rental> found = new ArrayList<>();
@@ -45,6 +47,14 @@ public class RentalController {
         }
         else if (product != null) {
             found = rentalRepository.findByProduct(product);
+            if (found.size() == 0) {
+                throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Rentals not found for this Product"
+                );
+            }
+        }
+        else if (approved != null) {
+            found = rentalRepository.findByApproved(approved);
             if (found.size() == 0) {
                 throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Rentals not found for this Product"
