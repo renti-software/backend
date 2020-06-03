@@ -105,7 +105,7 @@ class RentalControllerTest {
         RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
         rentalRepositoryFromContext.save(rental);
         rentalRepositoryFromContext.flush();
-        System.out.println(rentalRepositoryFromContext.findAll());
+        // System.out.println(rentalRepositoryFromContext.findAll());
 
         mockMvc.perform(get("/rentals/" + rental.getId()))
                 .andDo(print())
@@ -195,7 +195,9 @@ class RentalControllerTest {
     @DisplayName("Controller should allow to filtering by approval state and user")
     public void whenFilterByApprovalAndUser_thenReturnRental() throws Exception {
         User chico = new User("chico", "", null, "");
+        chico.setId(1L);
         User chico2 = new User("chico", "", null, "");
+        chico2.setId(2L);
         Location l = new Location("Lisboa", "Portugal");
         Product product = new Product("Car", "Carros", "", 212, "", l, chico);
         Product product2 = new Product("Car", "Carros", "", 212, "", l, chico2);
@@ -208,16 +210,25 @@ class RentalControllerTest {
 
         Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
         Mockito.when(rentalRepository.findByApproved(false)).thenReturn(List.of(rental, rental3));
-        Mockito.when(rentalRepository.findByProductUser(chico)).thenReturn(List.of(rental, rental2));
+        Mockito.when(rentalRepository.findByProductUserId(chico.getId())).thenReturn(List.of(rental, rental2));
+        Mockito.when(rentalRepository.findAll()).thenReturn(List.of(rental, rental2, rental3));
 
         RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
         rentalRepositoryFromContext.save(rental);
         rentalRepositoryFromContext.flush();
+        rentalRepositoryFromContext.save(rental2);
+        rentalRepositoryFromContext.flush();
+        rentalRepositoryFromContext.save(rental3);
+        rentalRepositoryFromContext.flush();
 
+        for(Rental r : rentalRepositoryFromContext.findAll())
+            System.out.println(r);
 
         Boolean approved = false;
-        User owner = chico;
-        mockMvc.perform(get("/rentals", approved, owner))
+        Long ownerId = chico.getId();
+        System.out.println("HERE");
+        System.out.println("/rentals" + "?approved=" + approved.toString() + "&ownerId=" + ownerId.toString());
+        mockMvc.perform(get("/rentals" + "?approved=" + approved.toString() + "&ownerId=" + ownerId.toString()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
