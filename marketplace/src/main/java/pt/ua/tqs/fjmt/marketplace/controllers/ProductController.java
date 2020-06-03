@@ -144,7 +144,7 @@ public class ProductController {
         }
         catch (Exception e){
             throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Error"
+                HttpStatus.NOT_FOUND, "Product Not Found"
             );
         }
     }
