@@ -47,6 +47,16 @@ public class Product {
         this.user = user;
     }
 
+    public Product(String name, String category, String description, int price, String imageLink, Location location, User user) {
+        this.name = name;
+        this.category = category;
+        this.Description = description;
+        this.price = Double.valueOf(price);
+        this.imageLink = imageLink;
+        this.location = location;
+        this.user = user;
+    }
+
     public static Comparator<Product> ProdNameComparatorAsc = new Comparator<Product>() {
         @Override
         public int compare(Product p1, Product p2) {
