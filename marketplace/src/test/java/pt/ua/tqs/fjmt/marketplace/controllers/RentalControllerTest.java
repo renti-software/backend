@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.Optional;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -160,6 +161,28 @@ class RentalControllerTest {
 
 
         mockMvc.perform(get("/rentals/" + rental.getId() + "/renter"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+    
+    @Test
+    @DisplayName("Controller should allow to filtering by approval state")
+    public void whenFilterByApproval_thenReturnRenter() throws Exception {
+        User chico = new User("chico", "", null, "");
+        Product product = new Product("Car", "Carros", "", 212, "", new Location("Lisboa", "Portugal"), chico);
+        User renter = new User();
+        Rental rental = new Rental(renter, product);
+
+        Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
+        Mockito.when(rentalRepository.findByApproved(false)).thenReturn(List.of(rental));
+
+        RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        rentalRepositoryFromContext.save(rental);
+        rentalRepositoryFromContext.flush();
+
+
+        mockMvc.perform(get("/rentals?approved=" + "false"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
