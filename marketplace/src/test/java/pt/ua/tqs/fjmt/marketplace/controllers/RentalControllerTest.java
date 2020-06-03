@@ -17,6 +17,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 
 import java.util.Optional;
 import java.util.ArrayList;
@@ -187,6 +189,40 @@ class RentalControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    @DisplayName("Controller should allow to filtering by approval state and user")
+    public void whenFilterByApprovalAndUser_thenReturnRental() throws Exception {
+        User chico = new User("chico", "", null, "");
+        User chico2 = new User("chico", "", null, "");
+        Location l = new Location("Lisboa", "Portugal");
+        Product product = new Product("Car", "Carros", "", 212, "", l, chico);
+        Product product2 = new Product("Car", "Carros", "", 212, "", l, chico2);
+        User renter = new User();
+        User renter2 = new User();
+        Rental rental = new Rental(renter, product);
+        Rental rental2 = new Rental(renter2, product);
+        Rental rental3 = new Rental(renter2, product2);
+        rental2.setApproved(true);
+
+        Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
+        Mockito.when(rentalRepository.findByApproved(false)).thenReturn(List.of(rental, rental3));
+        Mockito.when(rentalRepository.findByProductUser(chico)).thenReturn(List.of(rental, rental2));
+
+        RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        rentalRepositoryFromContext.save(rental);
+        rentalRepositoryFromContext.flush();
+
+
+        Boolean approved = false;
+        User owner = chico;
+        mockMvc.perform(get("/rentals", approved, owner))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(rental.getId())));
     }
     
     @Test
