@@ -123,4 +123,41 @@ class RentalRepositoryTest {
         //then
         Assertions.assertFalse(found.isPresent());
     }
+
+    @Test
+    @DisplayName("Repository should allow search by approval state")
+    public void whenFindByApproval_thenReturnRental() {
+        User chico = new User("chico", "", null, "");
+        entityManager.persist(chico);
+        User chico2 = new User("chico2", "", null, "");
+        entityManager.persist(chico2);
+        Product product = new Product("Car", "", "", 0.0, "", null, chico);
+        entityManager.persist(product);
+        Rental rental = new Rental(chico2, product, LocalDate.now(), LocalDate.now());
+        entityManager.persist(rental);
+        entityManager.flush();
+
+        List<Rental> found = rentalRepository.findByApproved(false);
+
+        Assertions.assertEquals(found.get(0), rental);
+    }
+
+    @Test
+    @DisplayName("Repository should allow search by approval state true")
+    public void whenFindByApprovalTrue_thenReturnRental() {
+        User chico = new User("chico", "", null, "");
+        entityManager.persist(chico);
+        User chico2 = new User("chico2", "", null, "");
+        entityManager.persist(chico2);
+        Product product = new Product("Car", "", "", 0.0, "", null, chico);
+        entityManager.persist(product);
+        Rental rental = new Rental(chico2, product, LocalDate.now(), LocalDate.now());
+        rental.setApproved(true);
+        entityManager.persist(rental);
+        entityManager.flush();
+
+        List<Rental> found = rentalRepository.findByApproved(true);
+
+        Assertions.assertEquals(found.get(0), rental);
+    }
 }
