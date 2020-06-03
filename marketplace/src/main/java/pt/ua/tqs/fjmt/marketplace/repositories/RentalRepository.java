@@ -15,6 +15,7 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
     public List<Rental> findAll();
     public List<Rental> findByRenter(User renter);
     public List<Rental> findByProduct(Product product);
+    public List<Rental> findByApproved(Boolean approved);
     public Optional<Rental> findById(Long id);
 
 }
