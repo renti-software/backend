@@ -32,6 +32,7 @@ public class Rental {
     private Boolean approved;
 
     public Rental() {
+        this.approved = false;
     }
 
     public Rental(User renter, Product product, LocalDate startDate, LocalDate endDate) {

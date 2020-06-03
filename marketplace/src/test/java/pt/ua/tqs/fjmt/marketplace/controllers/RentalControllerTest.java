@@ -17,8 +17,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -101,7 +105,7 @@ class RentalControllerTest {
         RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
         rentalRepositoryFromContext.save(rental);
         rentalRepositoryFromContext.flush();
-        System.out.println(rentalRepositoryFromContext.findAll());
+        // System.out.println(rentalRepositoryFromContext.findAll());
 
         mockMvc.perform(get("/rentals/" + rental.getId()))
                 .andDo(print())
@@ -163,6 +167,94 @@ class RentalControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+    
+    @Test
+    @DisplayName("Controller should allow to filtering by approval state")
+    public void whenFilterByApproval_thenReturnRenter() throws Exception {
+        User chico = new User("chico", "", null, "");
+        Product product = new Product("Car", "Carros", "", 212, "", new Location("Lisboa", "Portugal"), chico);
+        User renter = new User();
+        Rental rental = new Rental(renter, product);
+
+        Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
+        Mockito.when(rentalRepository.findByApproved(false)).thenReturn(List.of(rental));
+
+        RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        rentalRepositoryFromContext.save(rental);
+        rentalRepositoryFromContext.flush();
+
+
+        mockMvc.perform(get("/rentals?approved=" + "false"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    @DisplayName("Controller should allow to filtering by approval state and user")
+    public void whenFilterByApprovalAndUser_thenReturnRental() throws Exception {
+        User chico = new User("chico", "", null, "");
+        chico.setId(1L);
+        User chico2 = new User("chico", "", null, "");
+        chico2.setId(2L);
+        Location l = new Location("Lisboa", "Portugal");
+        Product product = new Product("Car", "Carros", "", 212, "", l, chico);
+        Product product2 = new Product("Car", "Carros", "", 212, "", l, chico2);
+        User renter = new User();
+        User renter2 = new User();
+        Rental rental = new Rental(renter, product);
+        Rental rental2 = new Rental(renter2, product);
+        Rental rental3 = new Rental(renter2, product2);
+        rental2.setApproved(true);
+
+        Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
+        Mockito.when(rentalRepository.findByApproved(false)).thenReturn(List.of(rental, rental3));
+        Mockito.when(rentalRepository.findByProductUserId(chico.getId())).thenReturn(List.of(rental, rental2));
+        Mockito.when(rentalRepository.findAll()).thenReturn(List.of(rental, rental2, rental3));
+
+        RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        rentalRepositoryFromContext.save(rental);
+        rentalRepositoryFromContext.flush();
+        rentalRepositoryFromContext.save(rental2);
+        rentalRepositoryFromContext.flush();
+        rentalRepositoryFromContext.save(rental3);
+        rentalRepositoryFromContext.flush();
+
+        for(Rental r : rentalRepositoryFromContext.findAll())
+            System.out.println(r);
+
+        Boolean approved = false;
+        Long ownerId = chico.getId();
+        System.out.println("HERE");
+        System.out.println("/rentals" + "?approved=" + approved.toString() + "&ownerId=" + ownerId.toString());
+        mockMvc.perform(get("/rentals" + "?approved=" + approved.toString() + "&ownerId=" + ownerId.toString()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(rental.getId())));
+    }
+    
+    @Test
+    @DisplayName("Filtering by approval state should return 404 when none approved")
+    public void whenFilterByApproval_thenReturn404() throws Exception {
+        User chico = new User("chico", "", null, "");
+        Product product = new Product("Car", "Carros", "", 212, "", new Location("Lisboa", "Portugal"), chico);
+        User renter = new User();
+        Rental rental = new Rental(renter, product);
+
+        Mockito.when(rentalRepository.save(Mockito.any(Rental.class))).thenReturn(rental);
+        Mockito.when(rentalRepository.findByApproved(true)).thenReturn(new ArrayList<Rental>());
+
+        RentalRepository rentalRepositoryFromContext = context.getBean(RentalRepository.class);
+        rentalRepositoryFromContext.save(rental);
+        rentalRepositoryFromContext.flush();
+
+
+        mockMvc.perform(get("/rentals?approved=" + "true"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     private static MockHttpServletRequestBuilder postRental (String url, Rental r) {
