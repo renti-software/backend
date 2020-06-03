@@ -154,6 +154,7 @@ class FavouritesControllerTest {
 
         Mockito.when(favouritesRepository.save(Mockito.any(Favourites.class))).thenReturn(f1);
         Mockito.when(favouritesRepository.findAll()).thenReturn(favourites);
+        Mockito.when(favouritesRepository.findByUserId(chico2.getId())).thenReturn(List.of(f4, f5));
 
         FavouritesRepository favouritesRepositoryFromContext = context.getBean(FavouritesRepository.class);
         favouritesRepositoryFromContext.save(f1);
@@ -167,8 +168,8 @@ class FavouritesControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].name", is(product2.getName())))
-                .andExpect(jsonPath("$[1].name", is(product4.getName())))
+                .andExpect(jsonPath("$[0].product.name", is(product2.getName())))
+                .andExpect(jsonPath("$[1].product.name", is(product4.getName())))
                 .andExpect(jsonPath("$", hasSize(2)));
     }
 
