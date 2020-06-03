@@ -25,31 +25,10 @@ public class FavouritesController {
 
     @ApiOperation(value = "It will return a list of Favourites for a user")
     @GetMapping("/{userId}")
-    public List<Product> getUsersFavourites(@ApiParam("Id of the user. Required")
+    public List<Favourites> getUsersFavourites(@ApiParam("Id of the user. Required")
                                                 @PathVariable("userId") Long userId){
-        List<Favourites> found = favouritesRepository.findAll();
-        List<Product> products = new ArrayList<>();
-        Iterator<Favourites> iterator;
-
-        if(found == null){
-            found = new ArrayList<>();
-        }
-
-        if(!found.isEmpty()) {
-            iterator = found.iterator();
-            while (iterator.hasNext()) {
-                Favourites favourites = iterator.next();
-                if (favourites.getUser().getId() != userId) {
-                    iterator.remove();
-                }
-            }
-
-            for(Favourites f : found){
-                products.add(f.getProduct());
-            }
-        }
-
-        return products;
+        List<Favourites> found = favouritesRepository.findByUserId(userId);
+        return found;
     }
 
     @GetMapping("")
