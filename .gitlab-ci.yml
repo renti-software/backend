@@ -54,6 +54,19 @@ maven_tests:
   #   POSTGRES_PASSWORD: "123"
   #   POSTGRES_HOST_AUTH_METHOD: trust
 
+integration_tests:
+  stage: tests
+  <<: *install_docker_compose
+  before_script:
+    - docker-compose up -d
+    - cd integration-tests
+  script:
+    - docker build -t intest .
+    - docker run -it --rm --net=backend_default intest:latest
+  after_script:
+    - cd ..
+    - docker-compose down
+
 build:
     stage: build
     <<: *install_docker_compose
